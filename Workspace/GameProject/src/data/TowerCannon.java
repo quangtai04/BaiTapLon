@@ -43,7 +43,7 @@ public class TowerCannon {
 	
 	private void shoot() {
 		timeSinceLastShot = 0;
-		projectiles.add(new Projectile(QuickLoad("bullet"), x+20, y+20, 30, 10));
+		projectiles.add(new Projectile(QuickLoad("bullet"),target, x+20, y+20, 900, 10));
 	}
 	
 	public void update() {
@@ -62,6 +62,6 @@ public class TowerCannon {
 
 	public void draw() {
 		DrawQuadTex(baseTexture, x, y, width, height);
-		DrawQuadTexRot(cannonTexture, x, y, width, height,60);
+		DrawQuadTexRot(cannonTexture, x, y, width, height,angle);
 	}
 }
