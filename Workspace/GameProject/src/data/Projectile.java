@@ -24,6 +24,6 @@ public class Projectile {
 	}
 	
 	public void draw() {
-		DrawQuadTex(texture, x, y, 32, 32);
+		DrawQuadTex(texture, x, y, 20, 20);
 	}
 }
