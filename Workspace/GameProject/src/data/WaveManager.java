@@ -17,13 +17,17 @@ public class WaveManager {
 		 newWave();
 	}
 	public void update() {
-		if(currentWave!= null) {
+		if(!currentWave.isComplete()) {
 			currentWave.Update();
 		}
-		
+		else {
+			newWave();
+		}
+
 	}
 	public void newWave()	{
 		currentWave = new Wave(enemyType, timeBetweenEnemies, enemiesPerWave);
-		
+		waveNumber++;
+		System.out.println("Beginning Wave " + waveNumber);
 	}
 }
