@@ -9,15 +9,15 @@ import java.util.ArrayList;
 
 public class Player {
 
-	private TileGrid gird;
+	private TileGrid grid;
 	private TileType[] types;
 	private int index;
 	private WaveManager waveManager;
 	private ArrayList<TowerCannon> towerList;
 	private boolean leftMouseButtonDown;
 
-	public Player(TileGrid gird, WaveManager waveManager) {
-		this.gird = gird;
+	public Player(TileGrid grid, WaveManager waveManager) {
+		this.grid = grid;
 		this.types = new TileType[3];
 		this.types[0] = TileType.Grass;
 		this.types[1] = TileType.Dirt;
@@ -28,10 +28,6 @@ public class Player {
 		this.leftMouseButtonDown = false;
 	}
 
-	public void setTile() {
-		gird.setTile((int) Math.floor(Mouse.getX() / 40), (int) Math.floor((HEIGHT - Mouse.getY() - 1) / 40),
-				types[index]);
-	}
 
 	public void update() {
 		for (TowerCannon t : towerList)
@@ -40,7 +36,7 @@ public class Player {
 		// Handle Mouse Input
 		if (Mouse.isButtonDown(0) && !leftMouseButtonDown) {
 			towerList.add(new TowerCannon(QuickLoad("cannonBase"),
-					gird.GetTile(Mouse.getX() / 40, (HEIGHT - Mouse.getY() - 1) / 40), 10,
+					grid.GetTile(Mouse.getX() / 40, (HEIGHT - Mouse.getY() - 1) / 40), 10,
 					waveManager.getCurrentWave().getEnemyList()));
 			// setTile();
 		}
@@ -56,16 +52,10 @@ public class Player {
 				Clock.ChangeMultiplier(-0.2f);
 			}
 			if (Keyboard.getEventKey() == Keyboard.KEY_T && Keyboard.getEventKeyState()) {
-				towerList.add(new TowerCannon(QuickLoad("cannonBase"), gird.GetTile(18, 9), 10,
+				towerList.add(new TowerCannon(QuickLoad("cannonBase"), grid.GetTile(18, 9), 10,
 						waveManager.getCurrentWave().getEnemyList()));
 			}
 		}
 	}
 
-	private void moveIndex() {
-		index++;
-		if (index > types.length - 1) {
-			index = 0;
-		}
-	}
 }
