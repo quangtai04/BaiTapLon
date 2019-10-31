@@ -25,7 +25,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class Artist {
-	public static final int WIDTH = 1000, HEIGHT = 600;
+	public static final int WIDTH = 800, HEIGHT = 600;
 
 	public static void BeginSession() {
 		Display.setTitle("CCG Game");

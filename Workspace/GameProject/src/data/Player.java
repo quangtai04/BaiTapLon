@@ -1,5 +1,6 @@
 package data;
 
+import helpers.Clock;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import static helpers.Artist.*;
@@ -49,7 +50,10 @@ public class Player {
 		// Handle KeyBoard Input
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState()) {
-				moveIndex();
+				Clock.ChangeMultiplier(0.2f);
+			}
+			if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
+				Clock.ChangeMultiplier(-0.2f);
 			}
 			if (Keyboard.getEventKey() == Keyboard.KEY_T && Keyboard.getEventKeyState()) {
 				towerList.add(new TowerCannon(QuickLoad("cannonBase"), gird.GetTile(18, 9), 10,
