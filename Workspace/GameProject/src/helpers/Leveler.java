@@ -16,7 +16,7 @@ public class Leveler {
 		String mapData = "";
 		for (int i = 0; i < grid.getTilesWide(); i++) {
 			for (int j = 0; j < grid.getTilesHeigh(); j++) {
-				mapData += getTileID(grid.GetTile(i, j));
+				mapData += getTileID(grid.getTile(i, j));
 				
 			}
 		}
@@ -40,6 +40,7 @@ public class Leveler {
 				for(int j= 0; j<grid.getTilesHeigh(); j++)	{
 					grid.setTile(i, j, getTileType(data.substring(i*grid.getTilesHeigh() + j, i*grid.getTilesHeigh()+j+1)));
 				}
+			br.close();
 		} catch (Exception e) {
 				e.printStackTrace();
 		}

@@ -26,6 +26,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class Artist {
 	public static final int WIDTH = 800, HEIGHT = 600;
+	public static final int TILE_SIZE = 40;
 
 	public static void BeginSession() {
 		Display.setTitle("CCG Game");

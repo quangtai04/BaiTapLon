@@ -1,6 +1,6 @@
 package data;
 
-import static helpers.Artist.HEIGHT;
+import static helpers.Artist.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import static helpers.Leveler.*;
@@ -22,7 +22,7 @@ public class Editor {
 	}
 
 	public void update() {
-		grid.Draw();
+		grid.draw();
 		
 		// Handle Mouse Input
 		if (Mouse.isButtonDown(0)) {
@@ -41,7 +41,7 @@ public class Editor {
 	}
 
 	private void setTile() {
-		grid.setTile((int) Math.floor(Mouse.getX() / 40), (int) Math.floor((HEIGHT - Mouse.getY() - 1) / 40),
+		grid.setTile((int) Math.floor(Mouse.getX() / TILE_SIZE), (int) Math.floor((HEIGHT - Mouse.getY() - 1) / TILE_SIZE),
 				types[index]);
 	}
 	
