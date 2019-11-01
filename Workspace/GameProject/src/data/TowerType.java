@@ -5,13 +5,14 @@ import static helpers.Artist.*;
 
 public enum TowerType {
 	
-	CanonnRed(QuickLoad("cannonBase"),10);
+	CanonnRed(new Texture[] {QuickLoad("cannonBase"), QuickLoad("cannonGun")},10),
+	CannonBlue(new Texture[] {QuickLoad("cannonBaseBlue"), QuickLoad("cannonGunBlue")},30);
 	
-	Texture texture;
+	Texture []textures;
 	int damage;
 	
-	TowerType(Texture texture, int damage) {
-		this.texture=texture;
+	TowerType(Texture [] textures, int damage) {
+		this.textures=textures;
 		this.damage = damage;
 	}
 	
