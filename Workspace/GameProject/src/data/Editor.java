@@ -3,6 +3,7 @@ package data;
 import static helpers.Artist.HEIGHT;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import static helpers.Leveler.*;
 
 
 public class Editor {
@@ -11,7 +12,7 @@ public class Editor {
 	private TileType []types;
 
 	public Editor() {
-		grid = new TileGrid();
+		this.grid = loadMap("newMap1");
 		this.index = 0;
 		
 		this.types = new TileType[3];
@@ -33,8 +34,8 @@ public class Editor {
 			if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState()) {
 				moveIndex();
 			}
-			if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
-			
+			if (Keyboard.getEventKey() == Keyboard.KEY_S && Keyboard.getEventKeyState()) {
+				saveMap("newMap1",grid);
 			}
 		}
 	}
