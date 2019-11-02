@@ -1,0 +1,19 @@
+package data;
+
+import static helpers.Artist.QuickLoad;
+import static helpers.Artist.TILE_SIZE;
+
+import java.awt.Window.Type;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class TowerCannonBlue extends Tower{
+		private TowerType type;
+         public  TowerCannonBlue(TowerType type,Tile startTile,CopyOnWriteArrayList<Enemy> enemies) {
+        	 super(type,startTile,enemies);
+         }
+         
+         @Override 
+         public void shoot(Enemy target) {
+        	 super.projectiles.add(new ProjectileCannonball(super.type.projectileType, super.target, super.getX(), super.getY(), 20,20));
+    	}
+}
