@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Enemy implements Entity {
 	private int width, height, currentCheckpoint;
-	private float speed, x, y, health, startHealth;
+	private float speed, x, y, health, startHealth, hiddenHealth;
 	private Texture texture, healthBackground, healthForeground, healthBorder;
 	private Tile startTile;
 	private boolean first, alive;
@@ -17,6 +17,34 @@ public class Enemy implements Entity {
 	private ArrayList<Checkpoint> checkpoints;
 	private int[] directions;
 
+	public Enemy(int tileX, int tileY, TileGrid grid) {
+		this.texture = QuickLoad("enemyFloating");
+		this.healthBackground = QuickLoad("healthBackground");
+		this.healthForeground = QuickLoad("healthForeground");
+		this.healthBorder = QuickLoad("healthBorder");
+		this.startTile = grid.getTile(tileX, tileY);
+		this.x = startTile.getX();
+		this.y = startTile.getY();
+		this.width = TILE_SIZE;
+		this.height = TILE_SIZE;
+		this.speed = 50;
+		this.health = 50;
+		this.startHealth = health;
+		this.hiddenHealth = health;
+		this.grid = grid;
+		this.first = true;
+		this.alive = true;
+		this.checkpoints = new ArrayList<Checkpoint>();
+		this.directions = new int[2];
+		// X direction
+		this.directions[0] = 0;
+		// Y direction
+		this.directions[1] = 0;
+		this.directions = findNextD(startTile);
+		this.currentCheckpoint = 0;
+		populateCheckpoint();
+	}
+	
 	public Enemy(Texture texture, Tile startTile, TileGrid grid, int width, int height, float speed, float health) {
 		this.texture = texture;
 		this.healthBackground = QuickLoad("healthBackground");
@@ -30,6 +58,7 @@ public class Enemy implements Entity {
 		this.speed = speed;
 		this.health = health;
 		this.startHealth = health;
+		this.hiddenHealth = health;
 		this.grid = grid;
 		this.first = true;
 		this.alive = true;
@@ -177,7 +206,14 @@ public class Enemy implements Entity {
 		DrawQuadTex(healthForeground, x, y - 16, TILE_SIZE * healthPercentage, 8);
 		DrawQuadTex(healthBorder, x, y - 16, width, 8);
 	}
+	
+	public void reduceHiddenHealth(float amount) {
+		hiddenHealth -= amount;
+	}
 
+	public float getHiddenHealth() {
+		return hiddenHealth;
+	}
 	public int getWidth() {
 		return width;
 	}
@@ -232,6 +268,10 @@ public class Enemy implements Entity {
 
 	public void setTexture(Texture texture) {
 		this.texture = texture;
+	}
+	
+	public void setTexture(String textureName) {
+		this.texture = QuickLoad(textureName);
 	}
 
 	public Tile getStartTile() {

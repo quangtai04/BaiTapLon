@@ -5,47 +5,57 @@ import static helpers.Artist.*;
 import static helpers.Artist.TILE_SIZE;
 
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.opengl.Texture;
 
 import UI.Button;
 import UI.UI;
+import UI.UI.Menu;
+import helpers.StateManager;
 
 public class Game {
 
 	private TileGrid grid;
 	private Player player;
 	private WaveManager waveManager;
-	private UI towerPickerUI;
+	private UI gameUI;
+	private Menu towerPickerMenu;
+	private Texture menuBackGround;
+	private Enemy[] enemyTypes;
 
-	public Game(int[][] map) {
-		grid = new TileGrid(map);
-		waveManager = new WaveManager(
-				new Enemy(QuickLoad("ufo"), grid.getTile(10, 8), grid, TILE_SIZE, TILE_SIZE, 70, 25), 2, 2);
+	public Game(TileGrid grid) {
+		this.grid = grid;
+		enemyTypes = new Enemy[3];
+		enemyTypes[0] = new EnemyAlien(2, 0, grid);
+		enemyTypes[1] = new EnemyUFO(2, 0, grid);
+		enemyTypes[2] = new EnemyPlane(2, 0, grid);
+		waveManager = new WaveManager(enemyTypes, 3, 2);
 		player = new Player(grid, waveManager);
 		player.setup();
-		towerPickerUI = new UI();
+		this.menuBackGround = QuickLoad("menu_background_2");
 		setupUI();
 	}
 
 	private void setupUI() {
-		towerPickerUI = new UI();
-		//towerPickerUI.addButton("CannonBlue", "cannonGunBlue", 0, 0,40,40);
-		//towerPickerUI.addButton("CannonIce", "cannonGun", 40, 0,40,40);
-		towerPickerUI.createMenu("TowerPicker", 800, 0,200,600, 2, 0);
-		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannonBlue", QuickLoad("cannonBaseBlue"), 0, 0,40,40));	// Load anh Button
-		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannnonGun", QuickLoad("cannonBase"), 0, 0,40,40));      // Load anh Button
-		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannnonGun", QuickLoad("cannonBase"), 0, 0,40,40));      // Load anh Button
-		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannnonGun", QuickLoad("cannonBase"), 0, 0,40,40));      // Load anh Button
+		gameUI = new UI();
+		gameUI.createMenu("TowerPicker", 800, 80, 200, 600, 2, 0);
+		towerPickerMenu = gameUI.getMenu("TowerPicker");
+		towerPickerMenu.quickAdd("BlueCannon", "cannonBaseBlue");
+		towerPickerMenu.quickAdd("CannnonGun", "cannonBase");
 	}
 
 	private void updateUI() {
-		towerPickerUI.draw();
+		gameUI.draw();
+		gameUI.drawString(820, 300, "Lives: " + player.Lives);
+		gameUI.drawString(820, 400, "Cash: " + player.Cash);
+		gameUI.drawString(820, 500, "Wave " + waveManager.getWaveNumber());
+		gameUI.drawString(0, 0, StateManager.framesInLastSecond + " fps");
 		if (Mouse.next()) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
-			if(mouuseClicked) {
-				if (towerPickerUI.getMenu("TowerPicker").isButtonClicked("CannonBlue"))				// Bat su kien khi click vao button
+			if (mouuseClicked) {
+				if (towerPickerMenu.isButtonClicked("BlueCannon")) // Bat su kien khi click vao button
 					player.pickTower(new TowerCannonBlue(TowerType.CannonBlue, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
-				if (towerPickerUI.getMenu("TowerPicker").isButtonClicked("CannnonGun"))		// bat su kien khi click vao button
+				if (towerPickerMenu.isButtonClicked("CannnonGun")) // bat su kien khi click vao button
 					player.pickTower(new TowerCannonIce(TowerType.CannonIce, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
 			}
@@ -53,7 +63,7 @@ public class Game {
 	}
 
 	public void update() {
-		DrawQuadTex(QuickLoad("menu_background"), 800, 0, 200, 600);
+		DrawQuadTex(menuBackGround, 800, 0, 200, 600);
 		grid.draw();
 		waveManager.update();
 		player.update();

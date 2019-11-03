@@ -17,6 +17,7 @@ public class MainMenu {
     	   menuUI.addButton("Play", "playButton", WIDTH/2-128, (int)(HEIGHT*0.40f));
     	   menuUI.addButton("Editor","editorButton", WIDTH/2-128, (int)(HEIGHT*0.55f));
     	   menuUI.addButton("Quit", "quitButton", WIDTH/2-128, (int)(HEIGHT*0.7));
+    	   
        }
        //Check if a button is clicked by the user, and if so do an action 
        private void updateButtons() {
@@ -31,7 +32,7 @@ public class MainMenu {
        }
        
        public void update() {
-    	   DrawQuadTex(background, 0, 0, 1280, 640);
+    	   DrawQuadTex(background, 0, 0, 1600, 640);
     	   menuUI.draw();
     	   updateButtons();
        }

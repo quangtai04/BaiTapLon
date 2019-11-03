@@ -1,8 +1,10 @@
 package UI;
 
+import java.awt.Font;
 import java.util.*;
 
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 import static helpers.Artist.*;
 
@@ -10,12 +12,21 @@ public class UI {
 
 	private ArrayList<Button> buttonList;
 	private ArrayList<Menu> menuList;
-
+	private TrueTypeFont font;
+	private Font awtFont;
+	
+	
 	public UI() {
 		buttonList = new ArrayList<Button>();
 		menuList = new ArrayList<UI.Menu>();
+		awtFont = new Font("Times New Roman", Font.BOLD, 24);
+		font = new TrueTypeFont(awtFont, false);
 	}
 
+	public void drawString(int x, int y, String text) {
+		font.drawString(x, y, text);
+	}
+	
 	public void addButton(String name, String textureName, int x, int y) {
 		buttonList.add(new Button(name, QuickLoad(textureName), x, y));
 	}
@@ -81,6 +92,15 @@ public class UI {
 		}
 
 		public void addButton(Button b) {
+			setButton(b);
+		}
+		
+		public void quickAdd(String name, String buttonTextureName) {
+			Button b = new Button(name, QuickLoad(buttonTextureName), 0, 0, 40, 40);
+			setButton(b);
+		}
+		
+		private void setButton(Button b) {
 			if (optionswidth != 0)
 				b.setY(y + (buttonAmount / optionswidth) * TILE_SIZE);
 			b.setX(x + (buttonAmount %2) * (padding + TILE_SIZE) + padding);

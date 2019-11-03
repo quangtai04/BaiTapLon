@@ -1,7 +1,9 @@
 package helpers;
 import  data.MainMenu;
+import data.TileGrid;
 import  data.Editor;
 import data.Game;
+import static helpers.Leveler.*;
 
 public class StateManager {
      public static enum GameState{
@@ -11,22 +13,13 @@ public class StateManager {
      public static MainMenu  mainMenu;
      public static Game      game;
      public static Editor    editor;
-     static int[][] map =
-    	      { { 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-				{ 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-				{ 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-				{ 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-				{ 0, 2, 2, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-				{ 0, 0, 2, 2, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0 },
-				{ 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1 }, };
+     
+     public static long nextSecond = System.currentTimeMillis() + 1000;     
+     public static int framesInLastSecond = 0;
+     public static int framesInCurrentSecond = 0;
+     
+     static TileGrid map = LoadMap("newMap1");
+    	      
      public static void update() {
     	 switch (gameState) {
 		    case MAINMENU:
@@ -48,6 +41,16 @@ public class StateManager {
 		    	break;
 
     	 }
+    	 
+    	 long currentTime = System.currentTimeMillis();
+    	 if(currentTime > nextSecond)	{
+    		 nextSecond += 1000;
+    		 framesInLastSecond = framesInCurrentSecond;
+    		 framesInCurrentSecond = 0;
+    	 }
+    	 framesInCurrentSecond ++;
+    	 
+   	
      }
      public static void setState(GameState newState) {
     	 gameState = newState;
