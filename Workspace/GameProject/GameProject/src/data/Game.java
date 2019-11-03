@@ -1,10 +1,12 @@
 package data;
 
 import static helpers.Artist.QuickLoad;
+import static helpers.Artist.*;
 import static helpers.Artist.TILE_SIZE;
 
 import org.lwjgl.input.Mouse;
 
+import UI.Button;
 import UI.UI;
 
 public class Game {
@@ -26,8 +28,13 @@ public class Game {
 
 	private void setupUI() {
 		towerPickerUI = new UI();
-		towerPickerUI.addButton("CannonBlue", "cannonGunBlue", 0, 0);
-		towerPickerUI.addButton("CannonIce", "cannonGun", 40, 0);
+		//towerPickerUI.addButton("CannonBlue", "cannonGunBlue", 0, 0,40,40);
+		//towerPickerUI.addButton("CannonIce", "cannonGun", 40, 0,40,40);
+		towerPickerUI.createMenu("TowerPicker", 800, 0,200,600, 2, 0);
+		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannonBlue", QuickLoad("cannonBaseBlue"), 0, 0,40,40));	// Load anh Button
+		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannnonGun", QuickLoad("cannonBase"), 0, 0,40,40));      // Load anh Button
+		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannnonGun", QuickLoad("cannonBase"), 0, 0,40,40));      // Load anh Button
+		towerPickerUI.getMenu("TowerPicker").addButton(new Button("CannnonGun", QuickLoad("cannonBase"), 0, 0,40,40));      // Load anh Button
 	}
 
 	private void updateUI() {
@@ -35,10 +42,10 @@ public class Game {
 		if (Mouse.next()) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			if(mouuseClicked) {
-				if (towerPickerUI.isButtonClicked("CannonBlue"))
+				if (towerPickerUI.getMenu("TowerPicker").isButtonClicked("CannonBlue"))				// Bat su kien khi click vao button
 					player.pickTower(new TowerCannonBlue(TowerType.CannonBlue, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
-				if (towerPickerUI.isButtonClicked("CannonIce"))
+				if (towerPickerUI.getMenu("TowerPicker").isButtonClicked("CannnonGun"))		// bat su kien khi click vao button
 					player.pickTower(new TowerCannonIce(TowerType.CannonIce, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
 			}
@@ -46,7 +53,7 @@ public class Game {
 	}
 
 	public void update() {
-
+		DrawQuadTex(QuickLoad("menu_background"), 800, 0, 200, 600);
 		grid.draw();
 		waveManager.update();
 		player.update();
