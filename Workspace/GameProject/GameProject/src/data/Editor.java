@@ -32,12 +32,13 @@ public class Editor {
 		this.grid = LoadMap(mapName+Integer.toString(mapIndex));
 		this.index = 0;
 		this.menuBackGround = QuickLoad("menu_background_2");
-		this.types = new TileType[5];
+		this.types = new TileType[6];
 		this.types[0] = TileType.Grass;
 		this.types[1] = TileType.Dirt;
 		this.types[2] = TileType.Water;
 		this.types[3] = TileType.DirtStart;
 		this.types[4] = TileType.DirtEnd;
+		this.types[5] = TileType.GrassNot;
 		this.back_menu = false;
 		setupUI();
 	}
@@ -47,20 +48,24 @@ public class Editor {
 		editorUI.createMenu("TilePicker", 800, 50, 200, 400, 2, 0);
 		tilePickerMenu = editorUI.getMenu("TilePicker");
 		tilePickerMenu.quickAdd("Grass", "grass", 50, 50, 50);
+		tilePickerMenu.quickAdd("GrassNot", "grassNot", 50,50,50);
 		tilePickerMenu.quickAdd("Dirt", "dirt", 50,50,50);
 		tilePickerMenu.quickAdd("Water", "water", 50,50,50);
 		tilePickerMenu.quickAdd("DirtStart", "dirtStart", 50,50,50);
 		tilePickerMenu.quickAdd("DirtEnd", "dirtEnd", 50,50,50);
-		tilePickerMenu.quickAdd("Save", "save", 70,70,50);
+		
 
-		editorUI.createMenu("Map", 800, 400, 100, 100, 2, 0);
+		editorUI.createMenu("Map", 800, 380, 100, 100, 2, 0);
 		buttonMap = editorUI.getMenu("Map");
 		buttonMap.quickAdd("backMap", "back", 96, 96,96);
 		buttonMap.quickAdd("nextMap", "next", 96, 96,96);
 		
 		editorUI.addButton("MapAndWave", "MapWave", 805, 320, 350, 60);
 		
-		editorUI.addButton("Menu", "HomeMenu", 820, 510, 300, 50);
+		editorUI.addButton("Clear", "clear",820, 460, 78,78);	
+		editorUI.addButton("Save", "save",920, 460, 70,70);		
+		
+		editorUI.addButton("Menu", "HomeMenu", 820, 540, 300, 50);		// button back menu
 
 	}
 
@@ -82,8 +87,13 @@ public class Editor {
 					index = 3;
 				else if (tilePickerMenu.isButtonClicked("DirtEnd"))
 					index = 4;
-				else if(tilePickerMenu.isButtonClicked("Save")) {
+				else if (tilePickerMenu.isButtonClicked("GrassNot"))
+					index = 5;
+				else if(editorUI.isButtonClicked("Save")) {
 					SaveMap(mapName+Integer.toString(mapIndex), grid);
+				}
+				else if(editorUI.isButtonClicked("Clear")) {
+					grid = new TileGrid();
 				}
 				else if (editorUI.isButtonClicked("Menu"))
 					back_menu = true;

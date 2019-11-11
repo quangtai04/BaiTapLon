@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.text.AbstractDocument.BranchElement;
+
 import data.Tile;
 import data.TileGrid;
 import data.TileType;
@@ -66,9 +68,12 @@ public class Leveler {
 			type = TileType.DirtEnd;
 			break;
 		case "5":
+			type = TileType.GrassNot;
+			break;
+		case "6":
 			type = TileType.NULL;
 			break;
-		
+
 		}
 
 		return type;
@@ -92,8 +97,11 @@ public class Leveler {
 		case DirtEnd:
 			ID = "4";
 			break;
-		case NULL:
+		case GrassNot:
 			ID = "5";
+			break;
+		case NULL:
+			ID = "6";
 			break;
 
 		}

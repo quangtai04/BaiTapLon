@@ -14,7 +14,7 @@ public class TileGrid {
 		map = new Tile[tilesWide][tilesHeigh];
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
-				map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Grass);
+				map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.GrassNot);
 			}
 		}
 	}
@@ -42,7 +42,8 @@ public class TileGrid {
 				case 4:
 					map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.DirtEnd);
 					break;
-				
+				case 5: 
+					map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.GrassNot);
 				}
 
 			}
