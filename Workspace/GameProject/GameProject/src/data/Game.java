@@ -25,13 +25,12 @@ public class Game {
 	private Texture menuBackGround;
 	private Enemy[] enemyTypes;
 	private Enemy[] enemisBoss;
-	private boolean back_menu = false, replay = false;
 	private int waveNumber = 1, start;
 	private int indexMap;
 	private int soLuongQuan = 3;
 	private float thoiGian = 3.15f;
 	private boolean nextMap = false, priviousMap = false, startGame = false, saveGame = false, drawGrid = true,
-			replayAnswer = false;
+			replayAnswer = false, back_menu = false, replay = false;
 
 	public Game(TileGrid grid, int indexMap) {
 		this.grid = grid;
@@ -59,8 +58,8 @@ public class Game {
 		gameUI.addButton("Lives", "Lives", 805, 210, 100, 40);
 		gameUI.addButton("Cash", "Cash", 905, 210, 100, 40);
 
-		gameUI.addButton("Start", "start", 820, 280, 80, 60);
-		gameUI.addButton("Pause", "pause", 910, 280, 80, 60);
+		gameUI.addButton("Start", "start_off", 820, 280, 80, 60);
+		gameUI.addButton("Pause", "pause_on", 910, 280, 80, 60);
 
 		gameUI.addButton("BackMap", "back", 820, 420, 70, 70);
 		gameUI.addButton("NextMap", "next", 920, 420, 70, 70);
@@ -99,10 +98,18 @@ public class Game {
 					back_menu = true;
 				}
 				if (gameUI.isButtonClicked("Start")) {
+					gameUI.removeButton("Start");
+					gameUI.removeButton("Pause");
+					gameUI.addButton("Start", "start_on", 820, 280, 80, 60);
+					gameUI.addButton("Pause", "pause_off", 910, 280, 80, 60);
 					Clock.setMultiplier(1);
 					start = 1;
 					startGame = true;
 				} else if (gameUI.isButtonClicked("Pause") && startGame == true) {
+					gameUI.removeButton("Start");
+					gameUI.removeButton("Pause");
+					gameUI.addButton("Start", "start_off", 820, 280, 80, 60);
+					gameUI.addButton("Pause", "pause_on", 910, 280, 80, 60);
 					Clock.setMultiplier(0);
 					startGame = false;
 				}

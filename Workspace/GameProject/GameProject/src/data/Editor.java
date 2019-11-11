@@ -57,7 +57,9 @@ public class Editor {
 		buttonMap = editorUI.getMenu("Map");
 		buttonMap.quickAdd("backMap", "back", 96, 96,96);
 		buttonMap.quickAdd("nextMap", "next", 96, 96,96);
-
+		
+		editorUI.addButton("MapAndWave", "MapWave", 805, 320, 350, 60);
+		
 		editorUI.addButton("Menu", "HomeMenu", 820, 510, 300, 50);
 
 	}
@@ -116,7 +118,7 @@ public class Editor {
 		DrawQuadTex(menuBackGround, 800, 0, 200, 600);
 		grid.draw();
 		editorUI.draw();
-		editorUI.drawString(850, 350, "Map: "+ (mapIndex+1));
+		editorUI.drawString(870, 330, "Map: "+ (mapIndex+1));
 	}
 
 	private void setTile() {

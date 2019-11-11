@@ -2,6 +2,7 @@ package helpers;
 
 import data.MainMenu;
 import data.TileGrid;
+import data.Information;
 import data.Editor;
 import data.Game;
 import static helpers.Leveler.*;
@@ -12,18 +13,18 @@ import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
 
 public class StateManager {
-	private static boolean checkAudio = true;
 	private static SimpleAudioPlayer simpleAudioPlayer = new SimpleAudioPlayer(
 			"C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\nhacnen.wav");
 
 	public static enum GameState {
-		MAINMENU, GAME, EDITOR
+		MAINMENU, CONTINUE, GAME, EDITOR, INFORMATION
 	}
 
 	public static GameState gameState = GameState.MAINMENU;
 	public static MainMenu mainMenu;
 	public static Game game, gameSave = null;
 	public static Editor editor;
+	public static Information information;
 
 	public static long nextSecond = System.currentTimeMillis() + 1000;
 	public static int framesInLastSecond = 0;
@@ -40,44 +41,54 @@ public class StateManager {
 				mainMenu = new MainMenu();
 			mainMenu.update();
 			break;
+		case CONTINUE:
+			if (gameSave == null) {
+				mainMenu.ContinueNull();
+			} else {
+				setState(GameState.GAME);
+			}
+			mainMenu.update();
+			break;
 
 		case GAME:
-			if (game == null || start) {
-				if (gameSave == null) {
-					map = LoadMap("Map" + Integer.toString(levelMap));
-					game = new Game(map, levelMap);
-					start = false;
-				} 
+			if (mainMenu.getClickContinue()) {
+				game = gameSave;
+				mainMenu.setClickContinue(false);
+			}
+			if (game == null || mainMenu.getClickStart()) {
+				levelMap = 0;
+				map = LoadMap("Map" + Integer.toString(levelMap));
+				game = new Game(map, levelMap);
+				mainMenu.setClickStart(false);
 			}
 			game.update();
 			if (game.getBackMenu()) {
 				gameState = GameState.MAINMENU;
-				start = true;
 				game.setBackMenu(false);
-				if(game.getSaveGame()) {
-					game.PauseGame();
+				if (game.getSaveGame()) {
+					gameSave.PauseGame();
 				}
+				mainMenu.setClickContinue(false);
+				mainMenu.setClickStart(false);
 			}
 			if (game.getNextMap()) {
-				game.setNextMap(false);
+//				game.setNextMap(false);
 				levelMap++;
 				if (levelMap > 9)
 					levelMap = 9;
-				start = true;
+				game = new Game(map, levelMap);
 			}
 			if (game.getPriviousMap()) {
-				game.setPriviousMap(false);
+//				game.setPriviousMap(false);
 				levelMap--;
 				if (levelMap < 0)
 					levelMap = 0;
-				start = true;
+				game = new Game(map, levelMap);
 			}
 			if (game.getGameReplay()) {
-				game.setGameReplay(false);
-				start = true;
+				game = new Game(map, levelMap);
 			}
 			if (game.getSaveGame()) {
-				start = false;
 				gameSave = game;
 			}
 
@@ -92,7 +103,12 @@ public class StateManager {
 				editor.setBackMenu(false);
 			}
 			break;
-
+		case INFORMATION:
+			if(information== null)	
+				information = new Information();
+			information.update();
+			break;
+			
 		}
 
 		long currentTime = System.currentTimeMillis();
@@ -108,4 +124,5 @@ public class StateManager {
 	public static void setState(GameState newState) {
 		gameState = newState;
 	}
+
 }
