@@ -19,5 +19,4 @@ public class TowerSpecies extends Tower {
 				new ProjectileCannonball(super.type.projectileType, super.target, super.getX(), super.getY(), 20, 20));
 		super.target.reduceHiddenHealth(super.type.projectileType.damage);
 	}
-
 }

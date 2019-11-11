@@ -24,7 +24,7 @@ public class Enemy implements Entity {
 	
 	
 	public Enemy(int tileX, int tileY, TileGrid grid) {
-		this.texture = QuickLoad("enemyFloating");
+		this.texture = QuickLoad("NormalEnemy");
 		this.healthBackground = QuickLoad("healthBackground");
 		this.healthForeground = QuickLoad("healthForeground");
 		this.healthBorder = QuickLoad("healthBorder");
@@ -39,9 +39,9 @@ public class Enemy implements Entity {
 		this.hiddenHealth = health;
 		this.grid = grid;
 		this.first = true;
-		this.alive = true;
-		this.checkpoints = new ArrayList<Checkpoint>();
-		this.directions = new int[2];
+		this.alive = true;	
+		this.checkpoints = new ArrayList<Checkpoint>();			// ArrayList mo ta huong di chuyen cua Enemy
+		this.directions = new int[2];		
 		// X direction
 		this.directions[0] = 0;
 		// Y direction
@@ -79,19 +79,18 @@ public class Enemy implements Entity {
 		populateCheckpoint();
 	}
 
-	public void update() {
-//		Check if it's the first time this class is updated, if so do nothing 
-		if (first)
+	public void update() { 
+		if (first)		// neu bat dau, khong lam gi ca
 			first = false;
 		else {
 			if (checkpointReached()) {
-				//Check if there are more checkpoints before moving on
-				if (currentCheckpoint+1 == checkpoints.size())
+				//Neu hoan thanh duong di, ket thuc
+				if (currentCheckpoint+1 == checkpoints.size())			  
 					endOfMazeReached();
 				else
 					currentCheckpoint++;
 			} else {
-				//If not at a checkpoints, continue in current direction
+				// Update toa do x,y 
 				x += Delta() * checkpoints.get(currentCheckpoint).getxDirection() * speed;
 				y += Delta() * checkpoints.get(currentCheckpoint).getyDirection() * speed;
 			}
@@ -99,7 +98,7 @@ public class Enemy implements Entity {
 		}
 	}
 	
-	//Run When last checkpoint is reached by enemy 
+	// Ket thuc khi den diem cuoi
 	private void endOfMazeReached() {
 		Player.modifyLives(-1);
 		die();
@@ -128,9 +127,9 @@ public class Enemy implements Entity {
 		while (cont) {
 			int[] currentD = findNextD(checkpoints.get(counter).getTile());
 			//Check if a next direction/ checkpoint exists, end after 20 checkpoint (arbitrary)
-			if (currentD[0] == 2 || counter == 20) {	//
+			if (currentD[0] == 2 || counter == 20) {	// currentD[0] ==2 : Khong tim duoc duong di tiep theo
 				cont = false;
-			} else {
+			} else {		
 				checkpoints.add(findNextC(checkpoints.get(counter).getTile(),
 						directions = findNextD(checkpoints.get(counter).getTile())));
 			}
@@ -138,7 +137,7 @@ public class Enemy implements Entity {
 		}
 	}
 
-	private Checkpoint findNextC(Tile s, int[] dir) {
+	private Checkpoint findNextC(Tile s, int[] dir) {	// Tim huong di tiep theo cua enemy
 		Tile next = null;
 		Checkpoint c = null;
 
@@ -168,9 +167,8 @@ public class Enemy implements Entity {
 		Tile r = grid.getTile(s.getXPlace() + 1, s.getYPlace());
 		Tile d = grid.getTile(s.getXPlace(), s.getYPlace() + 1);
 		Tile l = grid.getTile(s.getXPlace() - 1, s.getYPlace());
-		//Check if current inhabited mathches tiletype above, right, down or left
 			
-		if (TileType.Dirt == u.getType() && directions[1] != 1) {	//s.getType()
+		if (TileType.Dirt == u.getType() && directions[1] != 1) {	// direction[1] = 1: huong di truoc do cua enemy 
 			dir[0] = 0;
 			dir[1] = -1;
 			
@@ -194,7 +192,7 @@ public class Enemy implements Entity {
 
 	}
 
-	//Take damage from external source
+	//Tru mau cua enemy
 	public void damage(int amount) {
 		health -= amount;
 		if (health <= 0) {
@@ -203,9 +201,8 @@ public class Enemy implements Entity {
 		}
 	}
 
-	private void die() {
+	private void die() {	//enemy die
 		alive = false;
-
 	}
 
 	public void draw() {

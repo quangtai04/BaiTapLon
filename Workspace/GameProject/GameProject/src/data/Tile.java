@@ -8,7 +8,7 @@ public class Tile {
 	private int   width, height;
 	private Texture texture;
 	private TileType type;
-	private boolean occupied;
+	private boolean occupied;			// Neu co tower, occupoec= true; nguoc lai = false
 	
 	public Tile(float x, float y, int width, int height, TileType type) {
 		this.x = x;
@@ -87,7 +87,7 @@ public class Tile {
 	public boolean getOcccupied() {
 		return occupied;
 	}
-	public void setOccupied(boolean occupied) {
+	public void setOccupied(boolean occupied) {		
 		this.occupied = occupied;
 	}
 

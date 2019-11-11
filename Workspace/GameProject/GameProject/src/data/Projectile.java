@@ -4,7 +4,7 @@ import org.newdawn.slick.opengl.Texture;
 import static helpers.Clock.*;
 import static helpers.Artist.*;
 
-public abstract class Projectile implements Entity{
+public abstract class Projectile implements Entity{		// Xu li dan
 
 	private Texture texture;
 	private float x, y, speed,xVelocity,yVelocity;

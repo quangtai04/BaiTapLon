@@ -22,4 +22,18 @@ public enum TowerType {
 		this.firingSpeed = firingSpeed; //toc do ban
 		this.cost = cost;
 	}
+	
+	public String getTowerType()	{
+		switch (this) {
+		case TowerNormal:
+			return "Tower normal";
+		case TowerSniper:
+			return "Tower sniper";
+		case TowerMachine:
+			return "Tower machine";
+		default:
+			break;
+		}
+		return null;
+	}
 }

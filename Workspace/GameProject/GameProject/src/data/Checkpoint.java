@@ -1,6 +1,6 @@
 package data;
 
-public class Checkpoint {
+public class Checkpoint {			
 
 	private Tile tile;
 	private int xDirection, yDirection;

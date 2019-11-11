@@ -49,12 +49,10 @@ public class UI {
 		while(i<buttonList.size()) {
 			if(buttonList.get(i).getName().equals(name))	{
 				buttonList.remove(i);
-				continue;
 			}
 			else {
 				i++;
 			}
-			
 		}
 	}
 	public boolean isButtonClicked(String buttonName) {

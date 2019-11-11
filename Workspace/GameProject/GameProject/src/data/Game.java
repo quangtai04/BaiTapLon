@@ -29,18 +29,19 @@ public class Game {
 	private int indexMap;
 	private int soLuongQuan = 3;
 	private float thoiGian = 3.15f;
-	private boolean nextMap = false, priviousMap = false, startGame = false, saveGame = false, drawGrid = true,
-			replayAnswer = false, back_menu = false, replay = false;
+	private boolean nextMap = false, priviousMap = false, startGame = false, saveGame = false, replayAnswer = false,
+			back_menu = false, replay = false, isDestroyCancel = false, GameStarted = false;
+	private int x, y;
 
 	public Game(TileGrid grid, int indexMap) {
 		this.grid = grid;
 		enemyTypes = new Enemy[3];
 		enemisBoss = new Enemy[1];
-		enemyTypes[0] = new EnemyAlien(grid.getXYStart().x, grid.getXYStart().y, grid);
-		enemyTypes[1] = new EnemyUFO(grid.getXYStart().x, grid.getXYStart().y, grid);
-		enemyTypes[2] = new EnemyPlane(grid.getXYStart().x, grid.getXYStart().y, grid);
-		enemisBoss[0] = new EnemyBoss(grid.getXYStart().x, grid.getXYStart().y, grid);
-		waveManager = new WaveManager(enemyTypes, (int) thoiGian, soLuongQuan);
+		enemyTypes[0] = new TankerEnemy(grid.getXYStart().x, grid.getXYStart().y, grid);
+		enemyTypes[1] = new NormalEnemy(grid.getXYStart().x, grid.getXYStart().y, grid);
+		enemyTypes[2] = new SmallerEnemy(grid.getXYStart().x, grid.getXYStart().y, grid);
+		enemisBoss[0] = new BossEnemy(grid.getXYStart().x, grid.getXYStart().y, grid);
+		waveManager = new WaveManager(enemyTypes, (int) thoiGian, soLuongQuan); // tao danh sach enemy
 		player = new Player(grid, waveManager);
 		player.setup();
 		this.menuBackGround = QuickLoad("menu_background_2");
@@ -50,7 +51,7 @@ public class Game {
 
 	private void setupUI() {
 		gameUI = new UI();
-		gameUI.addButton("TowerNormal", "TowerNormalFull", 815, 50, 50, 50);
+		gameUI.addButton("TowerNormal", "TowerNormalFull", 815, 50, 50, 50); // Button Tower
 		gameUI.addButton("TowerSniper", "TowerSniperFull", 875, 50, 50, 50);
 		gameUI.addButton("TowerMachine", "TowerMachineFull", 935, 50, 50, 50);
 
@@ -58,16 +59,16 @@ public class Game {
 		gameUI.addButton("Lives", "Lives", 805, 210, 100, 40);
 		gameUI.addButton("Cash", "Cash", 905, 210, 100, 40);
 
-		gameUI.addButton("Start", "start_off", 820, 280, 80, 60);
-		gameUI.addButton("Pause", "pause_on", 910, 280, 80, 60);
+		gameUI.addButton("Start", "start_off", 820, 280, 80, 60); // Button Start
+		gameUI.addButton("Pause", "pause_on", 910, 280, 80, 60); // Button Pause
 
-		gameUI.addButton("BackMap", "back", 820, 420, 70, 70);
-		gameUI.addButton("NextMap", "next", 920, 420, 70, 70);
+		gameUI.addButton("BackMap", "back", 820, 420, 70, 70); // Button Back Map
+		gameUI.addButton("NextMap", "next", 920, 420, 70, 70); // Button next Map
 
-		gameUI.addButton("SaveGame", "save", 820, 495, 60, 60);
-		gameUI.addButton("Replay", "replay", 880, 495, 120, 60);
+		gameUI.addButton("SaveGame", "save", 820, 495, 60, 60); // Button save Game
+		gameUI.addButton("Replay", "replay", 880, 495, 120, 60); // Button replay game
 
-		gameUI.addButton("Menu", "HomeMenu", 820, 560, 300, 50);
+		gameUI.addButton("Menu", "HomeMenu", 820, 560, 300, 50); // Button back Main menu
 	}
 
 	private void updateUI() {
@@ -85,44 +86,48 @@ public class Game {
 		if (Mouse.next()) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			if (mouuseClicked) {
-				if (gameUI.isButtonClicked("TowerNormal")) // Bat su kien khi click vao button
+				int MouseX = Mouse.getX() / TILE_SIZE,MouseY = (HEIGHT - Mouse.getY() - 1) / TILE_SIZE;
+				if (MouseX < 20 && MouseY < 15) {
+					x = MouseX;
+					y = MouseY;
+					Tile tile = grid.getTile(x, y);
+					System.out.println(x + " " + y + " " + tile.getType());
+					if (tile.getType() == TileType.Grass && tile.getOcccupied() == true) {
+						isDestroyCancel = true;
+					}
+				} else if (gameUI.isButtonClicked("TowerNormal") && Mouse.getEventButtonState()) 	{
 					player.pickTower(new TowerSpecies(TowerType.TowerNormal, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
-				if (gameUI.isButtonClicked("TowerSniper")) // Bat su kien khi click vao button
+					GameStarted = true;
+				}
+				else if (gameUI.isButtonClicked("TowerSniper") && Mouse.getEventButtonState()) 	{
 					player.pickTower(new TowerSpecies(TowerType.TowerSniper, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
-				if (gameUI.isButtonClicked("TowerMachine")) // Bat su kien khi click vao button
+					GameStarted = true;
+				}
+				else if (gameUI.isButtonClicked("TowerMachine") && Mouse.getEventButtonState()) {
 					player.pickTower(new TowerSpecies(TowerType.TowerMachine, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
-				if (gameUI.isButtonClicked("Menu")) {
-					back_menu = true;
+					GameStarted = true;
 				}
-				if (gameUI.isButtonClicked("Start")) {
-					gameUI.removeButton("Start");
-					gameUI.removeButton("Pause");
-					gameUI.addButton("Start", "start_on", 820, 280, 80, 60);
-					gameUI.addButton("Pause", "pause_off", 910, 280, 80, 60);
+				else if (gameUI.isButtonClicked("Menu")) {
+					back_menu = true;
+				} else if (gameUI.isButtonClicked("Start")) {
 					Clock.setMultiplier(1);
 					start = 1;
 					startGame = true;
-				} else if (gameUI.isButtonClicked("Pause") && startGame == true) {
-					gameUI.removeButton("Start");
-					gameUI.removeButton("Pause");
-					gameUI.addButton("Start", "start_off", 820, 280, 80, 60);
-					gameUI.addButton("Pause", "pause_on", 910, 280, 80, 60);
+					GameStarted = true;
+				} 
+				else if (gameUI.isButtonClicked("Pause") && startGame == true) {
 					Clock.setMultiplier(0);
 					startGame = false;
-				}
-				if (gameUI.isButtonClicked("NextMap") && waveNumber == 1) {
+				} else if (GameStarted== false && gameUI.isButtonClicked("NextMap") && waveNumber == 1) {
 					nextMap = true;
-				}
-				if (gameUI.isButtonClicked("BackMap") && waveNumber == 1) {
+				} else if (GameStarted == false  && gameUI.isButtonClicked("BackMap") && waveNumber == 1) {
 					priviousMap = true;
-				}
-				if (gameUI.isButtonClicked("SaveGame")) {
+				} else if (gameUI.isButtonClicked("SaveGame")) {
 					saveGame = true;
-				}
-				if (gameUI.isButtonClicked("Replay")) {
+				} else if (gameUI.isButtonClicked("Replay")) {
 					replayAnswer = true;
 				}
 			}
@@ -131,33 +136,53 @@ public class Game {
 
 	public void update() {
 		DrawQuadTex(menuBackGround, 800, 0, 200, 600);
-
+		
 		grid.draw();
+		
+		if(GameStarted == true)	{
+			gameUI.removeButton("NextMap");
+			gameUI.removeButton("BackMap");
+		}
+		
+		if(startGame) {
+			gameUI.removeButton("Start");
+			gameUI.removeButton("Pause");
+			gameUI.addButton("Start", "start_on", 820, 280, 80, 60);
+			gameUI.addButton("Pause", "pause_off", 910, 280, 80, 60);
+		}	else {
+			gameUI.removeButton("Start");
+			gameUI.removeButton("Pause");
+			gameUI.addButton("Start", "start_off", 820, 280, 80, 60);
+			gameUI.addButton("Pause", "pause_on", 910, 280, 80, 60);
+			
+		}
+		
 		if (start == 0) {
-			Clock.setMultiplier(0);
+			Clock.setMultiplier(0); // Dung tro choi khi bat dau
 		}
 		if (waveManager.isComplete() == false) {
-			waveManager.update();
+			waveManager.update(); // Neu waveMange chua hoan thanh thi Update
 		} else {
 			waveNumber++;
 			if (waveNumber == 5) {
-				waveManager = new WaveManager(enemisBoss, 1, 1);
+				waveManager = new WaveManager(enemisBoss, 1, 1); // Man 5 co 1 Boss Enemy
 			} else if (waveNumber == 10) {
-				waveManager = new WaveManager(enemisBoss, 2, 3);
+				waveManager = new WaveManager(enemisBoss, 2, 3); // Man 10 co 3 Boss Enenmy
 			} else {
-				soLuongQuan = soLuongQuan + 2;
-				thoiGian -= 0.15;
+				soLuongQuan = soLuongQuan + 2; // So luong quan tang theo moi man choi
+				thoiGian -= 0.15; // Thoi gian giua 2 quan linh giam dan theo thoi gian
 				System.out.println(thoiGian);
 				waveManager = new WaveManager(enemyTypes, (int) thoiGian, soLuongQuan);
 			}
-			Clock.setMultiplier(0);
+			Clock.setMultiplier(0); // Dung tro choi khi qua moi level
+			startGame = false;
 			player.setWaveManager(waveManager);
 		}
 
 		player.update();
 		updateUI();
 
-		if (GameLose() || GameWin()) {
+		if (GameLose() || GameWin()) { // Xu li Game Lose hoac Game Win
 			if (GameLose()) {
 				PlayGameLose();
 			}
@@ -165,7 +190,7 @@ public class Game {
 				PlayGameWin();
 			}
 		}
-		if (replayAnswer) {
+		if (replayAnswer) { // Xu li neu chon Replay
 			PauseGame();
 			gameUI.addButton("Answer", "answer", 200, 150);
 			gameUI.addButton("Yes", "yes", 200, 300, 150, 60);
@@ -184,10 +209,31 @@ public class Game {
 				}
 			}
 		}
+		if (isDestroyCancel) {
+			gameUI.drawString(810, 350, player.findTower(x, y).getTowerType().getTowerType()+"("+x+"; "+y+")");
+			gameUI.addButton("Destroy", "destroy", 820, 400, 70, 50); 
+			gameUI.addButton("Cancel", "cancel", 920, 400, 70, 50);
+			if (Mouse.isButtonDown(0)) {
+				if (gameUI.isButtonClicked("Destroy") && Mouse.getEventButtonState()) {
+					player.removeTower(x,y);
+					grid.getTile(x, y).setOccupied(false);
+					System.out.println("Destroy");
+					gameUI.removeButton("Destroy");
+					gameUI.removeButton("Cancel");
+					isDestroyCancel = false;
+				} else if (gameUI.isButtonClicked("Cancel") && Mouse.getEventButtonState()) {
+					System.out.println("Cancel");
+					gameUI.removeButton("Destroy");
+					gameUI.removeButton("Cancel");
+					isDestroyCancel = false;
+				}
+			}
+
+		}
 
 	}
 
-	public void PlayGameLose() {
+	public void PlayGameLose() { // Giao dien Game Over
 		Clock.setMultiplier(0);
 		gameUI.addButton("GameOver", "lose", 240, 230, 800, 200);
 		gameUI.addButton("Replay", "replay", 275, 400, 140, 50);
@@ -203,7 +249,7 @@ public class Game {
 		}
 	}
 
-	public void PlayGameWin() {
+	public void PlayGameWin() { // Giao dien Game Win
 		Clock.setMultiplier(0);
 		gameUI.addButton("GameWin", "victory", 240, 230, 800, 200);
 		gameUI.addButton("Replay", "replay", 275, 400, 140, 50);
@@ -219,19 +265,19 @@ public class Game {
 		}
 	}
 
-	public boolean GameLose() {
+	public boolean GameLose() { // Tra ve gia tri true neu Game Lose, false truong hop con lai
 		if (player.getGameLose())
 			return true;
 		return false;
 	}
 
-	public boolean GameWin() {
-		if (waveNumber > 3) // player.livesCount
+	public boolean GameWin() { // Tra ve true neu Game Win, false trong truong hopw con lai
+		if (waveNumber > player.livesCount) // player.livesCount
 			return true;
 		return false;
 	}
 
-	public boolean getBackMenu() {
+	public boolean getBackMenu() { // Neu Click back menu, tra ve true; false trong truong hop con lai
 		return back_menu;
 	}
 
@@ -239,7 +285,7 @@ public class Game {
 		this.back_menu = back_menu;
 	}
 
-	public boolean getNextMap() {
+	public boolean getNextMap() { // = nextMap
 		return nextMap;
 	}
 

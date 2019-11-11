@@ -151,4 +151,7 @@ public abstract class Tower implements Entity {
 	public int getCost()	{
 		return cost;
 	}
+	public TowerType getTowerType() {
+		return this.type;
+	}
 }

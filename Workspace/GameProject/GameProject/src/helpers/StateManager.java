@@ -34,7 +34,16 @@ public class StateManager {
 	private static int levelMap = 0;
 
 	public static void update() {
-		simpleAudioPlayer.play();
+		if(mainMenu == null)													// Xu li music
+			simpleAudioPlayer.play();
+		else if(mainMenu != null && mainMenu.getCheckMusic() && mainMenu.getIsClickMusic()) {			
+			simpleAudioPlayer.continueMusic();
+			mainMenu.setIsClickMusic(false);
+		}
+		else if(mainMenu.getCheckMusic() == false && mainMenu.getIsClickMusic()){
+			simpleAudioPlayer.pause();
+			mainMenu.setIsClickMusic(false);
+		}
 		switch (gameState) {
 		case MAINMENU:
 			if (mainMenu == null)
@@ -42,27 +51,27 @@ public class StateManager {
 			mainMenu.update();
 			break;
 		case CONTINUE:
-			if (gameSave == null) {
+			if (gameSave == null) {				// Neu gameSave == null , thong bao loi 
 				mainMenu.ContinueNull();
-			} else {
+			} else {							// Nguoc lai thi chuyen sang Game
 				setState(GameState.GAME);
 			}
 			mainMenu.update();
 			break;
 
 		case GAME:
-			if (mainMenu.getClickContinue()) {
+			if (mainMenu.getClickContinue()) {	// Gan game = gameSave (Game luu truoc do)
 				game = gameSave;
-				mainMenu.setClickContinue(false);
+				mainMenu.setClickContinue(false);	
 			}
-			if (game == null || mainMenu.getClickStart()) {
+			if (game == null || mainMenu.getClickStart()) {			// Neu click Start game, bat dau game moi
 				levelMap = 0;
 				map = LoadMap("Map" + Integer.toString(levelMap));
 				game = new Game(map, levelMap);
 				mainMenu.setClickStart(false);
 			}
 			game.update();
-			if (game.getBackMenu()) {
+			if (game.getBackMenu()) {				// Xu li back Menu
 				gameState = GameState.MAINMENU;
 				game.setBackMenu(false);
 				if (game.getSaveGame()) {
@@ -85,16 +94,16 @@ public class StateManager {
 					levelMap = 0;
 				game = new Game(map, levelMap);
 			}
-			if (game.getGameReplay()) {
+			if (game.getGameReplay()) {				// Xu li replay game
 				game = new Game(map, levelMap);
 			}
-			if (game.getSaveGame()) {
+			if (game.getSaveGame()) {				// Luu Game
 				gameSave = game;
 			}
 
 			break;
 
-		case EDITOR:
+		case EDITOR:						// Sua Map Game
 			if (editor == null)
 				editor = new Editor();
 			editor.update();
@@ -103,7 +112,7 @@ public class StateManager {
 				editor.setBackMenu(false);
 			}
 			break;
-		case INFORMATION:
+		case INFORMATION:					// Thong tin game
 			if(information== null)	
 				information = new Information();
 			information.update();

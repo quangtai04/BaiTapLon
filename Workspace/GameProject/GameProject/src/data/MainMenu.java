@@ -13,8 +13,9 @@ import static helpers.Artist.*;
 public class MainMenu {
 	private Texture background;
 	private UI menuUI;
-	private static boolean error = false, clickContinue = false, clickStart = false;
-
+	private static boolean error = false, clickContinue = false, clickStart = false, checkMusic = true,
+			isClickMusic = false;			//error = true khi gameSave = null, false khi gameSave != null;
+	
 	public MainMenu() {
 		background = QuickLoad("mainmenu");
 		menuUI = new UI();
@@ -23,28 +24,38 @@ public class MainMenu {
 		menuUI.addButton("Editor", "editorButton", WIDTH / 2 - 128, (int) (HEIGHT * 0.6f), 400, 80);
 		menuUI.addButton("Quit", "quitButton", WIDTH / 2 - 128, (int) (HEIGHT * 0.75), 250, 80);
 		menuUI.addButton("Information", "information", 50, 540, 300, 50);
+		menuUI.addButton("Music", "musicOn", 920, 30,70,70);
 	}
 
 	// Check if a button is clicked by the user, and if so do an action
 	private void updateButtons() {
-		if (Mouse.isButtonDown(0)) {
-			if (menuUI.isButtonClicked("Continue")) {
-				clickContinue = true;
-				clickStart = false;
-				StateManager.setState(GameState.CONTINUE);
-			}
-			if (menuUI.isButtonClicked("Play"))	{
-				clickContinue = false;
-				clickStart = true;
-				StateManager.setState(GameState.GAME);
-			}
-			if (menuUI.isButtonClicked("Editor"))	{
-				StateManager.setState(GameState.EDITOR);
-			}
-			if (menuUI.isButtonClicked("Quit"))
-				System.exit(0);
-			if(menuUI.isButtonClicked("Information"))	{
-				StateManager.setState(GameState.INFORMATION);
+		if (Mouse.next()) {
+			if (Mouse.isButtonDown(0)) {
+				if (menuUI.isButtonClicked("Continue") && Mouse.getEventButtonState()) {
+					clickContinue = true;
+					clickStart = false;
+					StateManager.setState(GameState.CONTINUE);
+				} else if (menuUI.isButtonClicked("Play") && Mouse.getEventButtonState()) {
+					clickContinue = false;
+					clickStart = true;
+					StateManager.setState(GameState.GAME);
+				} else if (menuUI.isButtonClicked("Editor") && Mouse.getEventButtonState()) {
+					StateManager.setState(GameState.EDITOR);
+				} else if (menuUI.isButtonClicked("Quit"))
+					System.exit(0);
+				else if (menuUI.isButtonClicked("Information") && Mouse.getEventButtonState()) {
+					StateManager.setState(GameState.INFORMATION);
+				} else if (menuUI.isButtonClicked("Music") && Mouse.getEventButtonState()) {
+					checkMusic = !checkMusic;
+					if(checkMusic == false)	{
+						menuUI.removeButton("Music");
+						menuUI.addButton("Music", "musicOff", 920, 30,70,70);
+					} else {
+						menuUI.removeButton("Music");
+						menuUI.addButton("Music", "musicOn", 920, 30,70,70);
+					}
+					isClickMusic = true;
+				}
 			}
 		}
 	}
@@ -72,17 +83,36 @@ public class MainMenu {
 			}
 		}
 	}
+
 	public boolean getClickStart() {
 		return clickStart;
 	}
-	public void setClickStart(boolean clickStart)	{
+
+	public void setClickStart(boolean clickStart) {
 		this.clickStart = clickStart;
 	}
+
 	public boolean getClickContinue() {
 		return clickContinue;
 	}
-	public void setClickContinue(boolean clickContinue)	{
+
+	public void setClickContinue(boolean clickContinue) {
 		this.clickContinue = clickContinue;
 	}
-	
+
+	public void setCheckMusic(boolean checkMusic) {
+		this.checkMusic = checkMusic;
+	}
+
+	public boolean getCheckMusic() {
+		return this.checkMusic;
+	}
+
+	public void setIsClickMusic(boolean isClickMusic) {
+		this.isClickMusic = isClickMusic;
+	}
+
+	public boolean getIsClickMusic() {
+		return this.isClickMusic;
+	}
 }
