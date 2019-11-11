@@ -22,7 +22,7 @@ public class StateManager {
 
 	public static GameState gameState = GameState.MAINMENU;
 	public static MainMenu mainMenu;
-	public static Game game;
+	public static Game game, gameSave = null;
 	public static Editor editor;
 
 	public static long nextSecond = System.currentTimeMillis() + 1000;
@@ -33,7 +33,7 @@ public class StateManager {
 	private static int levelMap = 0;
 
 	public static void update() {
-		simpleAudioPlayer.play();		
+		simpleAudioPlayer.play();
 		switch (gameState) {
 		case MAINMENU:
 			if (mainMenu == null)
@@ -43,15 +43,20 @@ public class StateManager {
 
 		case GAME:
 			if (game == null || start) {
-				map = LoadMap("Map" + Integer.toString(levelMap));
-				game = new Game(map, levelMap);
-				start = false;
+				if (gameSave == null) {
+					map = LoadMap("Map" + Integer.toString(levelMap));
+					game = new Game(map, levelMap);
+					start = false;
+				} 
 			}
 			game.update();
 			if (game.getBackMenu()) {
 				gameState = GameState.MAINMENU;
-				game.setBackMenu(false);
 				start = true;
+				game.setBackMenu(false);
+				if(game.getSaveGame()) {
+					game.PauseGame();
+				}
 			}
 			if (game.getNextMap()) {
 				game.setNextMap(false);
@@ -70,6 +75,10 @@ public class StateManager {
 			if (game.getGameReplay()) {
 				game.setGameReplay(false);
 				start = true;
+			}
+			if (game.getSaveGame()) {
+				start = false;
+				gameSave = game;
 			}
 
 			break;

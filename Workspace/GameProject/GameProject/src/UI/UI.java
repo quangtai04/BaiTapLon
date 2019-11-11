@@ -44,7 +44,19 @@ public class UI {
 	public void addButton(String name, String textureName, int x, int y, int width, int height) {
 		buttonList.add(new Button(name, QuickLoad(textureName), x, y, width, height));
 	}
-
+	public void removeButton(String name) {
+		int i=0;
+		while(i<buttonList.size()) {
+			if(buttonList.get(i).getName().equals(name))	{
+				buttonList.remove(i);
+				continue;
+			}
+			else {
+				i++;
+			}
+			
+		}
+	}
 	public boolean isButtonClicked(String buttonName) {
 		Button b = getButton(buttonName);
 		float mouseY = HEIGHT - Mouse.getY() - 1;

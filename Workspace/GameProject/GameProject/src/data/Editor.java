@@ -116,7 +116,7 @@ public class Editor {
 		DrawQuadTex(menuBackGround, 800, 0, 200, 600);
 		grid.draw();
 		editorUI.draw();
-		editorUI.drawString(850, 350, "Level: "+ mapIndex);
+		editorUI.drawString(850, 350, "Map: "+ (mapIndex+1));
 	}
 
 	private void setTile() {
