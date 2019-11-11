@@ -12,23 +12,37 @@ public class UI {
 
 	private ArrayList<Button> buttonList;
 	private ArrayList<Menu> menuList;
-	private TrueTypeFont font;
+	private TrueTypeFont font, fontSmall;
 	private Font awtFont;
-	
+	private Font awtFontSmall;
+	private Font awtFontBig;
+	private TrueTypeFont fontBig;
 	
 	public UI() {
 		buttonList = new ArrayList<Button>();
 		menuList = new ArrayList<UI.Menu>();
-		awtFont = new Font("Times New Roman", Font.BOLD, 24);
+		awtFont = new Font("Times New Roman", Font.BOLD, 20);
 		font = new TrueTypeFont(awtFont, false);
+		awtFontSmall = new Font("Times New Roman", Font.BOLD, 15);
+		fontSmall = new TrueTypeFont(awtFontSmall, false);
+		awtFontBig = new Font("Times New Roman", Font.BOLD, 50);
+		fontBig = new TrueTypeFont(awtFontBig, false);
 	}
 
 	public void drawString(int x, int y, String text) {
 		font.drawString(x, y, text);
 	}
-	
+	public void drawStringSmall(int x, int y, String text) {
+		fontSmall.drawString(x, y, text);
+	}
+	public void drawStringBig(int x, int y, String text) {
+		fontBig.drawString(x, y, text);
+	}
 	public void addButton(String name, String textureName, int x, int y) {
 		buttonList.add(new Button(name, QuickLoad(textureName), x, y));
+	}
+	public void addButton(String name, String textureName, int x, int y, int width, int height) {
+		buttonList.add(new Button(name, QuickLoad(textureName), x, y, width, height));
 	}
 
 	public boolean isButtonClicked(String buttonName) {
@@ -96,14 +110,30 @@ public class UI {
 		}
 		
 		public void quickAdd(String name, String buttonTextureName) {
-			Button b = new Button(name, QuickLoad(buttonTextureName), 0, 0, 40, 40);
+			Button b = new Button(name, QuickLoad(buttonTextureName), 0, 0);
 			setButton(b);
+		}
+		public void quickAdd(String name, String buttonTextureName, int width, int height) {
+			Button b = new Button(name, QuickLoad(buttonTextureName), 0, 0, width, height);
+			setButton(b);
+		}
+		
+		public void quickAdd(String name, String buttonTextureName, int width, int height, int TileSize) {
+			Button b = new Button(name, QuickLoad(buttonTextureName), 0, 0, width, height);
+			setButton(b,TileSize);
 		}
 		
 		private void setButton(Button b) {
 			if (optionswidth != 0)
-				b.setY(y + (buttonAmount / optionswidth) * TILE_SIZE);
+				b.setY(y + (buttonAmount / optionswidth* 2 ) * TILE_SIZE);
 			b.setX(x + (buttonAmount %2) * (padding + TILE_SIZE) + padding);
+			buttonAmount++;
+			menuButtons.add(b);
+		}
+		private void setButton(Button b, int TileSize) {
+			if (optionswidth != 0)
+				b.setY(y + (buttonAmount / optionswidth* 2 ) * TileSize);
+			b.setX(x + (buttonAmount %2) * (padding + TileSize) + padding);
 			buttonAmount++;
 			menuButtons.add(b);
 		}
@@ -136,5 +166,6 @@ public class UI {
 		public String getName() {
 			return name;
 		}
+		
 	}
 }

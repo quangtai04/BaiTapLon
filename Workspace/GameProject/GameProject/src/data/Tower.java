@@ -39,7 +39,7 @@ public abstract class Tower implements Entity {
 	private Enemy acquireTarget() {
 		Enemy closest = null;
 		// Arbitrary distance (larger than map), to help with sorting Enemy distances
-		float closestDistance = 10000;
+		float closestDistance = 1000;					// Khoang cach ban
 		//Go throught each Enemy in 'enemies' and return nearest one 
 		for (Enemy e : enemies) {
 			if (isInRange(e) && findDistance(e) < closestDistance && e.getHiddenHealth() > 0) {

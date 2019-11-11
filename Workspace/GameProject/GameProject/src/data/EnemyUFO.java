@@ -6,5 +6,4 @@ public class EnemyUFO extends Enemy{
 		this.setTexture("ufo");
 		this.setSpeed(80);
 	}
-	
 }

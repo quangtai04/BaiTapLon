@@ -36,4 +36,5 @@ public class WaveManager {
 	public int getWaveNumber() {
 		return waveNumber;
 	}
+	
 }

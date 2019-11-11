@@ -18,13 +18,16 @@ public class Player {
 	private boolean leftMouseButtonDown, rightMouseButtonDown, holdingTower;
 	private Tower tempTower;
 	public static int Cash, Lives;
-
+	public int livesCount = 1;
+	
 	public Player(TileGrid grid, WaveManager waveManager) {
 		this.grid = grid;
-		this.types = new TileType[3];
+		this.types = new TileType[5];
 		this.types[0] = TileType.Grass;
 		this.types[1] = TileType.Dirt;
 		this.types[2] = TileType.Water;
+		this.types[1] = TileType.DirtStart;
+		this.types[1] = TileType.DirtEnd;
 		this.waveManager = waveManager;
 		this.towerList = new ArrayList<Tower>();
 		this.leftMouseButtonDown = false;
@@ -37,8 +40,8 @@ public class Player {
 
 	// Initialize Cash and Lives values for player
 	public void setup() {
-		Cash = 200;
-		Lives = 10;
+		Cash = 100;
+		Lives = livesCount;
 	}
 	// Check if player can afford tower, if so: charge player tower cost
 	public static boolean modifyCash(int amount) {
@@ -49,6 +52,12 @@ public class Player {
 		}
 		System.out.println(Cash);
 		return false;
+	}
+	public static boolean modifyCash2(int amount) {
+		if(Cash + amount >=0)
+			return true;
+		return false;
+		
 	}
 
 	public static void modifyLives(int amount) {
@@ -91,21 +100,21 @@ public class Player {
 	private void placeTower() {
 		Tile currentTile = getMouseTile();
 		if (holdingTower) {
-			if (modifyCash(-tempTower.getCost()) && !currentTile.getOcccupied() && tempTower.type == TowerType.CannonBlue && currentTile.getType()== TileType.Grass)	{
-				System.out.println(currentTile.getType());
-				System.out.println(tempTower.type);
+			Tower tower = tempTower;
+			if (modifyCash2(-tempTower.getCost()) && !currentTile.getOcccupied() && tempTower.type == TowerType.CannonRed && currentTile.getType()== TileType.Grass)	{
 				towerList.add(tempTower);
 				currentTile.setOccupied(true);
 				holdingTower = false;
 				tempTower = null;
-			}	else if(modifyCash(-tempTower.getCost()) && currentTile.getOcccupied() && tempTower.type == TowerType.CannonIce && currentTile.getType()== TileType.Water) {
-				System.out.println(currentTile.getType());
-				System.out.println(tempTower.type);
+				this.Cash = this.Cash - tower.getCost();
+			}	else if(modifyCash2(-tempTower.getCost()) && currentTile.getOcccupied() && tempTower.type == TowerType.CannonIce && currentTile.getType()== TileType.Water) {
 				towerList.add(tempTower);
 				currentTile.setOccupied(true);
 				holdingTower = false;
 				tempTower = null;
+				this.Cash = this.Cash - tower.getCost();
 			}
+			
 		}
 		
 	}
@@ -118,5 +127,9 @@ public class Player {
 	private Tile getMouseTile() {
 		return grid.getTile(Mouse.getX() / TILE_SIZE, (HEIGHT - Mouse.getY() - 1) / TILE_SIZE);
 	}
-
+	public boolean getGameLose()	{
+		if(Lives<=0)	return true;
+		return false;
+	}
+	
 }

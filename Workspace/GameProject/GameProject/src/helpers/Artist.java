@@ -29,7 +29,7 @@ public class Artist {
 	public static final int TILE_SIZE = 40;
 
 	public static void BeginSession() {
-		Display.setTitle("CCG Game");
+		Display.setTitle("Game Tower Defense");
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create();

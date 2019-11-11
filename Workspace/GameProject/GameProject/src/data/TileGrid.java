@@ -1,5 +1,8 @@
 package data;
+
 import static helpers.Artist.TILE_SIZE;
+
+import java.util.ArrayList;
 
 public class TileGrid {
 	public Tile[][] map;
@@ -33,7 +36,15 @@ public class TileGrid {
 				case 2:
 					map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Water);
 					break;
+				case 3:
+					map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.DirtStart);
+					break;
+				case 4:
+					map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.DirtEnd);
+					break;
+				
 				}
+
 			}
 		}
 	}
@@ -73,4 +84,31 @@ public class TileGrid {
 			}
 		}
 	}
+
+	public ToaDo getXYStart() {
+		ToaDo start = new ToaDo();
+		for (int i = 0; i < tilesWide; i++)
+			for (int j = 0; j < tilesHeigh; j++) {
+				if (this.getTile(i, j).getType() == TileType.DirtStart) {
+					start.x = i; // x
+					start.y = j; // y
+					break;
+				}
+			}
+		if (this.getTile(start.x - 1, start.y).getType() == TileType.Dirt) {
+			start.x -= 1;
+		}
+		if (this.getTile(start.x + 1, start.y).getType() == TileType.Dirt) {
+			start.x += 1;
+		}
+		if (this.getTile(start.x, start.y - 1).getType() == TileType.Dirt) {
+			start.y -= 1;
+		}
+		if (this.getTile(start.x, start.y + 1).getType() == TileType.Dirt) {
+			start.y += 1;
+		}
+
+		return start;
+	}
+
 }

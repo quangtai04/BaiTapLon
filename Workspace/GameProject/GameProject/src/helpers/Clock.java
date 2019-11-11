@@ -49,6 +49,9 @@ public class Clock {
 			multiplier += change;
 		}
 	}
+	public static void setMultiplier(float change) {
+		multiplier = change;
+	}
 
 	public static void Pause() {
 		if (paused)

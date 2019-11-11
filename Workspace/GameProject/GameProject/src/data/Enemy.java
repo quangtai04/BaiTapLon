@@ -1,10 +1,13 @@
 package data;
 
 import org.newdawn.slick.opengl.Texture;
+import org.w3c.dom.ls.LSException;
+
 import static helpers.Artist.*;
 import static helpers.Clock.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Enemy implements Entity {
 	private int width, height, currentCheckpoint;
@@ -16,13 +19,13 @@ public class Enemy implements Entity {
 
 	private ArrayList<Checkpoint> checkpoints;
 	private int[] directions;
-
+	
 	public Enemy(int tileX, int tileY, TileGrid grid) {
 		this.texture = QuickLoad("enemyFloating");
 		this.healthBackground = QuickLoad("healthBackground");
 		this.healthForeground = QuickLoad("healthForeground");
 		this.healthBorder = QuickLoad("healthBorder");
-		this.startTile = grid.getTile(tileX, tileY);
+		this.startTile = grid.getTile(tileX, tileY);		// Truyen vi tri bat dau
 		this.x = startTile.getX();
 		this.y = startTile.getY();
 		this.width = TILE_SIZE;
@@ -74,13 +77,13 @@ public class Enemy implements Entity {
 	}
 
 	public void update() {
-		//Check if it's the first time this class is updated, if so do nothing 
+//		Check if it's the first time this class is updated, if so do nothing 
 		if (first)
 			first = false;
 		else {
 			if (checkpointReached()) {
 				//Check if there are more checkpoints before moving on
-				if (currentCheckpoint + 1 == checkpoints.size())
+				if (currentCheckpoint+1 == checkpoints.size())
 					endOfMazeReached();
 				else
 					currentCheckpoint++;
@@ -121,7 +124,7 @@ public class Enemy implements Entity {
 		while (cont) {
 			int[] currentD = findNextD(checkpoints.get(counter).getTile());
 			//Check if a next direction/ checkpoint exists, end after 20 checkpoint (arbitrary)
-			if (currentD[0] == 2 || counter == 20) {
+			if (currentD[0] == 2 || counter == 20) {	//
 				cont = false;
 			} else {
 				checkpoints.add(findNextC(checkpoints.get(counter).getTile(),
@@ -155,30 +158,34 @@ public class Enemy implements Entity {
 		return c;
 	}
 
-	private int[] findNextD(Tile s) {
+	private int[] findNextD(Tile s) {		// s la vi tri hien tai
 		int[] dir = new int[2];
 		Tile u = grid.getTile(s.getXPlace(), s.getYPlace() - 1);
 		Tile r = grid.getTile(s.getXPlace() + 1, s.getYPlace());
 		Tile d = grid.getTile(s.getXPlace(), s.getYPlace() + 1);
 		Tile l = grid.getTile(s.getXPlace() - 1, s.getYPlace());
 		//Check if current inhabited mathches tiletype above, right, down or left
-		if (s.getType() == u.getType() && directions[1] != 1) {
+			
+		if (TileType.Dirt == u.getType() && directions[1] != 1) {	//s.getType()
 			dir[0] = 0;
 			dir[1] = -1;
-		} else if (s.getType() == r.getType() && directions[0] != -1) {
+			
+		} 
+		else if (TileType.Dirt == r.getType() && directions[0] != -1) {	//
 			dir[0] = 1;
 			dir[1] = 0;
-		} else if (s.getType() == d.getType() && directions[1] != -1) {
+		} 
+		else if (TileType.Dirt == d.getType()&& directions[1] != -1) {	//
 			dir[0] = 0;
 			dir[1] = 1;
-		} else if (s.getType() == l.getType()) {
+		} 
+		else if (TileType.Dirt == l.getType() && directions[0]!=1) {	//
 			dir[0] = -1;
 			dir[1] = 0;
 		} else {
 			dir[0] = 2;
 			dir[1] = 2;
 		}
-
 		return dir;
 
 	}

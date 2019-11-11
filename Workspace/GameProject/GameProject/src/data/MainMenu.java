@@ -14,9 +14,9 @@ public class MainMenu {
        public MainMenu() {
     	   background = QuickLoad("mainmenu");
     	   menuUI = new UI();
-    	   menuUI.addButton("Play", "playButton", WIDTH/2-128, (int)(HEIGHT*0.40f));
-    	   menuUI.addButton("Editor","editorButton", WIDTH/2-128, (int)(HEIGHT*0.55f));
-    	   menuUI.addButton("Quit", "quitButton", WIDTH/2-128, (int)(HEIGHT*0.7));
+    	   menuUI.addButton("Play", "playButton", WIDTH/2-128, (int)(HEIGHT*0.40f),400,80);
+    	   menuUI.addButton("Editor","editorButton", WIDTH/2-128, (int)(HEIGHT*0.55f),400,80);
+    	   menuUI.addButton("Quit", "quitButton", WIDTH/2-128, (int)(HEIGHT*0.7),250,80);
     	   
        }
        //Check if a button is clicked by the user, and if so do an action 
