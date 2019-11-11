@@ -58,7 +58,7 @@ public class Information {
 		
 		aboutUI.drawString(20, 500, "Program made by: ");
 		aboutUI.drawString(50, 530, "PHAM QUANG TAI - 18021110 - K63T");
-		aboutUI.drawString(50, 560, "LE DUC THANG - 1802xxxx - K63T");
+		aboutUI.drawString(50, 560, "LE DUC THANG - - K63T");
 		
 	}
 
