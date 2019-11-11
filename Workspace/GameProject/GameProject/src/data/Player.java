@@ -18,7 +18,7 @@ public class Player {
 	private boolean leftMouseButtonDown, rightMouseButtonDown, holdingTower;
 	private Tower tempTower;
 	public static int Cash, Lives;
-	public int livesCount = 1000, cashCount = 1000;
+	public int livesCount = 10, cashCount = 1000;
 	
 	public Player(TileGrid grid, WaveManager waveManager) {
 		this.grid = grid;

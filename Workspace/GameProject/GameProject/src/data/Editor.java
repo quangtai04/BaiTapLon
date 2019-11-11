@@ -58,10 +58,7 @@ public class Editor {
 		buttonMap.quickAdd("backMap", "back", 96, 96,96);
 		buttonMap.quickAdd("nextMap", "next", 96, 96,96);
 
-		editorUI.createMenu("BackMenu", 800, 500, 80, 100, 1, 0);
-		editorUI.drawStringSmall(960, 550, "Menu");
-		backMenu = editorUI.getMenu("BackMenu");
-		backMenu.quickAdd("Menu", "HomeMenu", 250, 90);
+		editorUI.addButton("Menu", "HomeMenu", 820, 510, 300, 50);
 
 	}
 
@@ -86,7 +83,7 @@ public class Editor {
 				else if(tilePickerMenu.isButtonClicked("Save")) {
 					SaveMap(mapName+Integer.toString(mapIndex), grid);
 				}
-				else if (backMenu.isButtonClicked("Menu"))
+				else if (editorUI.isButtonClicked("Menu"))
 					back_menu = true;
 				else if (buttonMap.isButtonClicked("backMap")) {
 					mapIndex -=1;

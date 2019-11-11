@@ -54,13 +54,17 @@ public class Game {
 		gameUI.addButton("TowerSniper", "TowerSniperFull", 875, 50, 50, 50);
 		gameUI.addButton("TowerMachine", "TowerMachineFull", 935, 50, 50, 50);
 		
-		gameUI.addButton("Start", "start", 820, 330, 80, 60);
-		gameUI.addButton("Pause", "pause", 910, 330, 80, 60);
+		gameUI.addButton("MapAndWave", "MapWave", 805, 150, 350, 60);
+		gameUI.addButton("Lives", "Lives", 805, 210, 100, 40);
+		gameUI.addButton("Cash", "Cash", 905, 210, 100, 40);
+		
+		gameUI.addButton("Start", "start", 820, 280, 80, 60);
+		gameUI.addButton("Pause", "pause", 910, 280, 80, 60);
 
 		gameUI.addButton("Menu", "HomeMenu", 820, 510, 300, 50);
-
-		gameUI.addButton("BackMap", "back", 820, 420, 80, 80);
-		gameUI.addButton("NextMap", "next", 920, 420, 80, 80);
+		
+		gameUI.addButton("BackMap", "back", 820, 420, 70, 70);
+		gameUI.addButton("NextMap", "next", 920, 420, 70, 70);
 	}
 
 	private void updateUI() {
@@ -68,10 +72,11 @@ public class Game {
 		gameUI.drawStringSmall(815, 110, "Normal");
 		gameUI.drawStringSmall(875, 110, "Sniper");
 		gameUI.drawStringSmall(935, 110, "Machine");
-		gameUI.drawString(820, 150, "MAP: " + (indexMap + 1));
-		gameUI.drawString(840, 200, "Lives: " + player.Lives);
-		gameUI.drawString(840, 240, "Cash: $" + player.Cash);
-		gameUI.drawString(840, 280, "Wave " + waveNumber + "/10");
+		
+		gameUI.drawString(840, 160, "MAP " + (indexMap + 1)+":  "+ waveNumber +" / 10");
+		gameUI.drawStringSmall(840, 215, ""+player.Lives+"/"+player.livesCount);
+		gameUI.drawStringSmall(940, 215, ""+player.Cash);
+
 		gameUI.drawStringSmall(0, 0, StateManager.framesInLastSecond + " fps");
 		
 
@@ -177,7 +182,7 @@ public class Game {
 	}
 
 	public boolean GameWin() {
-		if (waveNumber > 10) // player.livesCount
+		if (waveNumber > player.livesCount) // 
 			return true;
 		return false;
 	}
