@@ -27,7 +27,7 @@ public class Game {
 	private boolean back_menu = false, replay = false;
 	private int waveNumber = 0;
 	private int indexMap;
-	private int soLuongQuan = 1;
+	private int soLuongQuan = 5;
 	private boolean nextMap = false, priviousMap = false;
 
 	public Game(TileGrid grid, int indexMap) {
@@ -109,6 +109,9 @@ public class Game {
 			waveManager.update();
 		} else if (waveNumber == 0) {
 			Clock.setMultiplier(0);
+		} else if (waveManager.getWaveNumber() > waveNumber && waveNumber !=0) {
+			waveManager = new WaveManager(enemyTypes, 1, soLuongQuan * waveManager.getWaveNumber());
+			Clock.setMultiplier(0);
 		}
 
 		player.update();
@@ -121,35 +124,31 @@ public class Game {
 				gameUI.addButton("GameOver", "lose", 240, 230, 800, 200);
 				gameUI.addButton("Replay", "replay", 275, 400, 140, 50);
 				gameUI.addButton("BackMenu", "HomeMenu", 550, 400, 200, 50);
-//				if (Mouse.next())
-//					if (Mouse.isButtonDown(0)) {
-//						if (gameUI.isButtonClicked("Replay")) {
-//							setGameReplay(true);
-//						}
-//						if (gameUI.isButtonClicked("BackMenu")) {
-//							back_menu = true;
-//						}
-//					}
-				if(Mouse.isButtonDown(0))
-					setBackMenu(true);
+
+				if (Mouse.isButtonDown(0)) {
+					if (gameUI.isButtonClicked("Replay")) {
+						setGameReplay(true);
+					}
+					if (gameUI.isButtonClicked("BackMenu")) {
+						setBackMenu(true);
+					}
+				}
 			}
 			if (GameWin()) {
 				drawGameWin();
 				Clock.setMultiplier(0);
 				gameUI.addButton("GameWin", "victory", 240, 230, 800, 200);
-//				gameUI.addButton("Replay", "replay", 275, 400, 140, 50);
-//				gameUI.addButton("NextMap", "nextMap", 550, 400, 200, 50);
-//				if (Mouse.next())
-//					if (Mouse.isButtonDown(0)) {
-//						if (gameUI.isButtonClicked("Replay")) {
-//							setGameReplay(true);
-//						}
-//						if (gameUI.isButtonClicked("NextMap")) {
-//							nextMap = true;
-//						}
-//					}
-				if(Mouse.isButtonDown(0))
-					setBackMenu(true);
+				gameUI.addButton("Replay", "replay", 275, 400, 140, 50);
+				gameUI.addButton("nextMapWin", "nextMap", 550, 400, 200, 50);
+
+				if (Mouse.isButtonDown(0)) {
+					if (gameUI.isButtonClicked("Replay")) {
+						setGameReplay(true);
+					}
+					if (gameUI.isButtonClicked("nextMapWin")) {
+						setNextMap(true);
+					}
+				}
 			}
 		}
 	}
