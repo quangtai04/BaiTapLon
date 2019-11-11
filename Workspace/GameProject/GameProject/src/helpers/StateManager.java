@@ -81,14 +81,22 @@ public class StateManager {
 				mainMenu.setClickStart(false);
 			}
 			if (game.getNextMap()) {
-//				game.setNextMap(false);
+				game.setNextMap(false);
 				levelMap++;
 				if (levelMap > 9)
 					levelMap = 9;
-				game = new Game(map, levelMap);
+				if(game.GameWin()) {				// Game win
+					game = new Game(map, levelMap);
+					game.setStartedGame(true);		// Khong cho chuyen man choi
+				}
+				else {
+					game = new Game(map, levelMap);
+				}
+				
+				
 			}
 			if (game.getPriviousMap()) {
-//				game.setPriviousMap(false);
+				game.setPriviousMap(false);
 				levelMap--;
 				if (levelMap < 0)
 					levelMap = 0;

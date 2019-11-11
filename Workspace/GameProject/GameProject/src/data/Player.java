@@ -157,4 +157,7 @@ public class Player {
 		}
 		return towerFind;
 	}
+	public Tower getTemTower()	{
+		return this.tempTower;
+	}
 }

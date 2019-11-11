@@ -15,6 +15,7 @@ import helpers.SimpleAudioPlayer;
 import helpers.StateManager;
 
 import static helpers.SimpleAudioPlayer.*;
+import static helpers.Leveler.*;
 
 public class Game {
 
@@ -30,11 +31,12 @@ public class Game {
 	private int soLuongQuan = 3;
 	private float thoiGian = 3.15f;
 	private boolean nextMap = false, priviousMap = false, startGame = false, saveGame = false, replayAnswer = false,
-			back_menu = false, replay = false, isDestroyCancel = false, GameStarted = false;
-	private int x, y;
+			back_menu = false, replay = false, isDestroyCancel = false, GameStarted = false, addX1X2 = false,
+			X1Enable = true, isClickBackMenu = false;
+	private int x, y, multiplier = 1;
 
 	public Game(TileGrid grid, int indexMap) {
-		this.grid = grid;
+		this.grid = LoadMap("Map"+Integer.toString(indexMap));
 		enemyTypes = new Enemy[3];
 		enemisBoss = new Enemy[1];
 		enemyTypes[0] = new TankerEnemy(grid.getXYStart().x, grid.getXYStart().y, grid);
@@ -86,7 +88,7 @@ public class Game {
 		if (Mouse.next()) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			if (mouuseClicked) {
-				int MouseX = Mouse.getX() / TILE_SIZE,MouseY = (HEIGHT - Mouse.getY() - 1) / TILE_SIZE;
+				int MouseX = Mouse.getX() / TILE_SIZE, MouseY = (HEIGHT - Mouse.getY() - 1) / TILE_SIZE;
 				if (MouseX < 20 && MouseY < 15) {
 					x = MouseX;
 					y = MouseY;
@@ -95,40 +97,56 @@ public class Game {
 					if (tile.getType() == TileType.Grass && tile.getOcccupied() == true) {
 						isDestroyCancel = true;
 					}
-				} else if (gameUI.isButtonClicked("TowerNormal") && Mouse.getEventButtonState()) 	{
+				} else if (gameUI.isButtonClicked("TowerNormal") && Mouse.getEventButtonState()) {
 					player.pickTower(new TowerSpecies(TowerType.TowerNormal, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
 					GameStarted = true;
-				}
-				else if (gameUI.isButtonClicked("TowerSniper") && Mouse.getEventButtonState()) 	{
+				} else if (gameUI.isButtonClicked("TowerSniper") && Mouse.getEventButtonState()) {
 					player.pickTower(new TowerSpecies(TowerType.TowerSniper, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
 					GameStarted = true;
-				}
-				else if (gameUI.isButtonClicked("TowerMachine") && Mouse.getEventButtonState()) {
+				} else if (gameUI.isButtonClicked("TowerMachine") && Mouse.getEventButtonState()) {
 					player.pickTower(new TowerSpecies(TowerType.TowerMachine, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
 					GameStarted = true;
-				}
-				else if (gameUI.isButtonClicked("Menu")) {
-					back_menu = true;
+				} else if (gameUI.isButtonClicked("Menu")) {			//Back Menu
+					isClickBackMenu = true;
 				} else if (gameUI.isButtonClicked("Start")) {
-					Clock.setMultiplier(1);
-					start = 1;
+					StartGame();
+					start = 1; // Tro choi bat dau
 					startGame = true;
 					GameStarted = true;
-				} 
-				else if (gameUI.isButtonClicked("Pause") && startGame == true) {
-					Clock.setMultiplier(0);
+				} else if (gameUI.isButtonClicked("Pause") && startGame == true) {
+					PauseGame();
 					startGame = false;
-				} else if (GameStarted== false && gameUI.isButtonClicked("NextMap") && waveNumber == 1) {
+				} else if (GameStarted == false && gameUI.isButtonClicked("NextMap") && waveNumber == 1) {
 					nextMap = true;
-				} else if (GameStarted == false  && gameUI.isButtonClicked("BackMap") && waveNumber == 1) {
+				} else if (GameStarted == false && gameUI.isButtonClicked("BackMap") && waveNumber == 1) {
 					priviousMap = true;
 				} else if (gameUI.isButtonClicked("SaveGame")) {
 					saveGame = true;
 				} else if (gameUI.isButtonClicked("Replay")) {
 					replayAnswer = true;
+				} else if (addX1X2 == true && X1Enable == false && gameUI.isButtonClicked("X1")) {
+					X1Enable = true;
+					gameUI.removeButton("X1");
+					gameUI.removeButton("X2Enable");
+					gameUI.addButton("X1", "X1Enable", 840, 440, 40, 40);
+					gameUI.addButton("X2", "X2", 920, 440, 40, 40);
+					multiplier = 1;
+					if (startGame == true) {
+						StartGame();
+					}
+				} else if (addX1X2 == true && X1Enable == true && gameUI.isButtonClicked("X2")) {
+					X1Enable = false;
+					gameUI.removeButton("X1Enable");
+					gameUI.removeButton("X2");
+					gameUI.addButton("X1", "X1", 840, 440, 40, 40);
+					gameUI.addButton("X2", "X2Enable", 920, 440, 40, 40);
+					multiplier = 2;
+					if (startGame) {
+						StartGame();
+					}
 				}
 			}
 		}
@@ -136,29 +154,34 @@ public class Game {
 
 	public void update() {
 		DrawQuadTex(menuBackGround, 800, 0, 200, 600);
-		
+
 		grid.draw();
-		
-		if(GameStarted == true)	{
+
+		if (GameStarted == true) {
 			gameUI.removeButton("NextMap");
 			gameUI.removeButton("BackMap");
+			if (addX1X2 == false) {
+				gameUI.addButton("X1", "X1Enable", 840, 440, 40, 40);
+				gameUI.addButton("X2", "X2", 920, 440, 40, 40);
+				addX1X2 = true;
+			}
 		}
-		
-		if(startGame) {
+		if (startGame) {
 			gameUI.removeButton("Start");
 			gameUI.removeButton("Pause");
 			gameUI.addButton("Start", "start_on", 820, 280, 80, 60);
 			gameUI.addButton("Pause", "pause_off", 910, 280, 80, 60);
-		}	else {
+		} else {
 			gameUI.removeButton("Start");
 			gameUI.removeButton("Pause");
 			gameUI.addButton("Start", "start_off", 820, 280, 80, 60);
 			gameUI.addButton("Pause", "pause_on", 910, 280, 80, 60);
-			
 		}
-		
-		if (start == 0) {
-			Clock.setMultiplier(0); // Dung tro choi khi bat dau
+
+		updateUI();
+		player.update();
+		if (start == 0) { // Dung tro choi khi bat dau
+			Clock.setMultiplier(0);
 		}
 		if (waveManager.isComplete() == false) {
 			waveManager.update(); // Neu waveMange chua hoan thanh thi Update
@@ -179,9 +202,6 @@ public class Game {
 			player.setWaveManager(waveManager);
 		}
 
-		player.update();
-		updateUI();
-
 		if (GameLose() || GameWin()) { // Xu li Game Lose hoac Game Win
 			if (GameLose()) {
 				PlayGameLose();
@@ -191,46 +211,14 @@ public class Game {
 			}
 		}
 		if (replayAnswer) { // Xu li neu chon Replay
-			PauseGame();
-			gameUI.addButton("Answer", "answer", 200, 150);
-			gameUI.addButton("Yes", "yes", 200, 300, 150, 60);
-			gameUI.addButton("No", "no", 500, 300, 150, 60);
-			if (Mouse.isButtonDown(0)) {
-				if (gameUI.isButtonClicked("Yes")) {
-					setGameReplay(true);
-					replayAnswer = false;
-				}
-				if (gameUI.isButtonClicked("No")) {
-					replayAnswer = false;
-					gameUI.removeButton("Answer");
-					gameUI.removeButton("Yes");
-					gameUI.removeButton("No");
-					StartGame();
-				}
-			}
+			ReplayGame();
 		}
 		if (isDestroyCancel) {
-			gameUI.drawString(810, 350, player.findTower(x, y).getTowerType().getTowerType()+"("+x+"; "+y+")");
-			gameUI.addButton("Destroy", "destroy", 820, 400, 70, 50); 
-			gameUI.addButton("Cancel", "cancel", 920, 400, 70, 50);
-			if (Mouse.isButtonDown(0)) {
-				if (gameUI.isButtonClicked("Destroy") && Mouse.getEventButtonState()) {
-					player.removeTower(x,y);
-					grid.getTile(x, y).setOccupied(false);
-					System.out.println("Destroy");
-					gameUI.removeButton("Destroy");
-					gameUI.removeButton("Cancel");
-					isDestroyCancel = false;
-				} else if (gameUI.isButtonClicked("Cancel") && Mouse.getEventButtonState()) {
-					System.out.println("Cancel");
-					gameUI.removeButton("Destroy");
-					gameUI.removeButton("Cancel");
-					isDestroyCancel = false;
-				}
-			}
-
+			DestroyTower();
 		}
-
+		if(isClickBackMenu)	{
+			BackMenu();
+		}
 	}
 
 	public void PlayGameLose() { // Giao dien Game Over
@@ -248,6 +236,37 @@ public class Game {
 			}
 		}
 	}
+	
+	public void DestroyTower()	{
+		Tower towerTemp = player.getTemTower();
+		Tower tower = player.findTower(x, y);
+		if (grid.getTile(x, y).getType() == TileType.Grass && towerTemp == null)
+			gameUI.drawString(810, 350,
+					player.findTower(x, y).getTowerType().getTowerType() + "(" + x + "; " + y + ")");
+
+		gameUI.addButton("Destroy", "destroy", 820, 380, 70, 50);
+		gameUI.addButton("Cancel", "cancel", 920, 380, 70, 50);
+
+		if (tower == null) {
+			gameUI.removeButton("Destroy");
+			gameUI.removeButton("Cancel");
+		}
+		if (Mouse.isButtonDown(0) && tower != null) {
+			if (gameUI.isButtonClicked("Destroy") && Mouse.getEventButtonState()) {
+				player.removeTower(x, y);
+				grid.getTile(x, y).setOccupied(false);
+				System.out.println("Destroy");
+				gameUI.removeButton("Destroy");
+				gameUI.removeButton("Cancel");
+				isDestroyCancel = false;
+			} else if (gameUI.isButtonClicked("Cancel") && Mouse.getEventButtonState()) {
+				System.out.println("Cancel");
+				gameUI.removeButton("Destroy");
+				gameUI.removeButton("Cancel");
+				isDestroyCancel = false;
+			}
+		}
+	}
 
 	public void PlayGameWin() { // Giao dien Game Win
 		Clock.setMultiplier(0);
@@ -261,6 +280,45 @@ public class Game {
 			}
 			if (gameUI.isButtonClicked("nextMapWin")) {
 				setNextMap(true);
+			}
+		}
+	}
+	
+	public void ReplayGame()	{
+		PauseGame();
+		gameUI.addButton("Answer", "answer", 200, 150);
+		gameUI.addButton("Yes", "yes", 200, 300, 150, 60);
+		gameUI.addButton("No", "no", 500, 300, 150, 60);
+		if (Mouse.isButtonDown(0)) {
+			if (gameUI.isButtonClicked("Yes")) {
+				setGameReplay(true);
+				replayAnswer = false;
+			}
+			if (gameUI.isButtonClicked("No")) {
+				replayAnswer = false;
+				gameUI.removeButton("Answer");
+				gameUI.removeButton("Yes");
+				gameUI.removeButton("No");
+				StartGame();
+			}
+		}
+	}
+	
+	public void BackMenu()	{
+		PauseGame();
+		gameUI.addButton("Answer", "answerBackMenu", 200, 150);
+		gameUI.addButton("Yes", "yes", 200, 300, 150, 60);
+		gameUI.addButton("No", "no", 500, 300, 150, 60);
+		if (Mouse.isButtonDown(0)) {
+			if (gameUI.isButtonClicked("Yes")) {
+				back_menu = true;
+			}
+			if (gameUI.isButtonClicked("No")) {
+				isClickBackMenu = false;
+				gameUI.removeButton("Answer");
+				gameUI.removeButton("Yes");
+				gameUI.removeButton("No");
+				if(startGame)	StartGame();
 			}
 		}
 	}
@@ -322,7 +380,14 @@ public class Game {
 	}
 
 	public void StartGame() {
-		Clock.setMultiplier(1);
+		Clock.setMultiplier(multiplier);
+	}
+	
+	public boolean getStartedGame() {
+		return GameStarted;
+	}
+	public void setStartedGame(boolean GameStarted)	{
+		this.GameStarted = GameStarted;
 	}
 
 }
