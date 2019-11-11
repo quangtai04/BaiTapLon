@@ -3,6 +3,10 @@ package data;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import helpers.SimpleAudioPlayer;
+
+import static helpers.SimpleAudioPlayer.*;
+
 import static helpers.Clock.*;
 import static helpers.Artist.TILE_SIZE;
 public class Wave {
@@ -10,8 +14,9 @@ public class Wave {
 	private Enemy[] enemyTypes;
 	private CopyOnWriteArrayList<Enemy> enemyList;
 	private int enemiesPerWave, enemiesSpawned;
+	private static int waveNumber = 0;
 	private boolean waveCompleted;
-
+	
 	public Wave(Enemy[] enemyTypes, float spawTime, int enemiesPerWave) {
 		this.spawnTime = spawTime;
 		this.enemyTypes = enemyTypes;
@@ -20,8 +25,8 @@ public class Wave {
 		this.timeSinceLastSpawn = 0;
 		this.enemyList = new CopyOnWriteArrayList<Enemy>();
 		this.waveCompleted = false;
-
 		spawn();
+		waveNumber = 1;
 	}
 
 	public void update() {
@@ -31,6 +36,7 @@ public class Wave {
 			timeSinceLastSpawn += Delta();
 			if (timeSinceLastSpawn > spawnTime) {
 				spawn();
+				waveNumber ++;
 				timeSinceLastSpawn = 0;
 			}
 		}
@@ -43,7 +49,7 @@ public class Wave {
 				enemyList.remove(e);
 			}
 		}
-		if(allEnemilesDead)
+		if(allEnemilesDead && waveNumber == enemiesPerWave)
 			waveCompleted = true;
 	}
 

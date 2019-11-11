@@ -39,11 +39,11 @@ public abstract class Tower implements Entity {
 	private Enemy acquireTarget() {
 		Enemy closest = null;
 		// Arbitrary distance (larger than map), to help with sorting Enemy distances
-		float closestDistance = 1000;					// Khoang cach ban
-		//Go throught each Enemy in 'enemies' and return nearest one 
+//		float closestDistance = 1000;					// Khoang cach ban
+		//Go throught each Enemy in 'enemies' and return nearest one 	findDistance(e) < closestDistance &&
 		for (Enemy e : enemies) {
-			if (isInRange(e) && findDistance(e) < closestDistance && e.getHiddenHealth() > 0) {
-				closestDistance = findDistance(e);
+			if (isInRange(e) &&  e.getHiddenHealth() > 0) {
+//				closestDistance = findDistance(e);
 				closest = e;
 			}
 		}
@@ -80,9 +80,10 @@ public abstract class Tower implements Entity {
 	}
 
 	public void update() {
-		if (!targeted || target.getHiddenHealth() < 0) {
+		if ( !targeted || target.getHiddenHealth() <= 0) {
 			target = acquireTarget();
-		} else {
+		}
+		else if (targeted && target.getHiddenHealth() > 0){
 			angle = calculateAngle();
 			if (timeSinceLastShot > firingSpeed) {
 				shoot(target);
@@ -91,7 +92,7 @@ public abstract class Tower implements Entity {
 			
 		}
 
-		if (target == null || target.isAlive() == false)
+		if (target == null || target.isAlive() == false || (target != null && isInRange(target) == false))
 			targeted = false;
 
 		timeSinceLastShot += Delta();

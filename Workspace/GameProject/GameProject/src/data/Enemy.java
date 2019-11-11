@@ -3,6 +3,8 @@ package data;
 import org.newdawn.slick.opengl.Texture;
 import org.w3c.dom.ls.LSException;
 
+import helpers.SimpleAudioPlayer;
+
 import static helpers.Artist.*;
 import static helpers.Clock.*;
 
@@ -19,6 +21,7 @@ public class Enemy implements Entity {
 
 	private ArrayList<Checkpoint> checkpoints;
 	private int[] directions;
+	
 	
 	public Enemy(int tileX, int tileY, TileGrid grid) {
 		this.texture = QuickLoad("enemyFloating");
@@ -100,6 +103,7 @@ public class Enemy implements Entity {
 	private void endOfMazeReached() {
 		Player.modifyLives(-1);
 		die();
+		
 	}
 
 	private boolean checkpointReached() {

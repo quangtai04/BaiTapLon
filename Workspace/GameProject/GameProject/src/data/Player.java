@@ -18,7 +18,7 @@ public class Player {
 	private boolean leftMouseButtonDown, rightMouseButtonDown, holdingTower;
 	private Tower tempTower;
 	public static int Cash, Lives;
-	public int livesCount = 10;
+	public int livesCount = 1000, cashCount = 1000;
 	
 	public Player(TileGrid grid, WaveManager waveManager) {
 		this.grid = grid;
@@ -40,7 +40,7 @@ public class Player {
 
 	// Initialize Cash and Lives values for player
 	public void setup() {
-		Cash = 100;
+		Cash = cashCount;
 		Lives = livesCount;
 	}
 	// Check if player can afford tower, if so: charge player tower cost
@@ -101,20 +101,13 @@ public class Player {
 		Tile currentTile = getMouseTile();
 		if (holdingTower) {
 			Tower tower = tempTower;
-			if (modifyCash2(-tempTower.getCost()) && !currentTile.getOcccupied() && tempTower.type == TowerType.CannonRed && currentTile.getType()== TileType.Grass)	{
+			if (modifyCash2(-tempTower.getCost()) && !currentTile.getOcccupied() && currentTile.getType()== TileType.Grass)	{
 				towerList.add(tempTower);
 				currentTile.setOccupied(true);
 				holdingTower = false;
 				tempTower = null;
 				this.Cash = this.Cash - tower.getCost();
-			}	else if(modifyCash2(-tempTower.getCost()) && currentTile.getOcccupied() && tempTower.type == TowerType.CannonIce && currentTile.getType()== TileType.Water) {
-				towerList.add(tempTower);
-				currentTile.setOccupied(true);
-				holdingTower = false;
-				tempTower = null;
-				this.Cash = this.Cash - tower.getCost();
-			}
-			
+			}				
 		}
 		
 	}
@@ -130,6 +123,9 @@ public class Player {
 	public boolean getGameLose()	{
 		if(Lives<=0)	return true;
 		return false;
+	}
+	public void setWaveManager(WaveManager waveManager) {
+		this.waveManager = waveManager;
 	}
 	
 }

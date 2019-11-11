@@ -11,7 +11,10 @@ import UI.Button;
 import UI.UI;
 import UI.UI.Menu;
 import helpers.Clock;
+import helpers.SimpleAudioPlayer;
 import helpers.StateManager;
+
+import static helpers.SimpleAudioPlayer.*;
 
 public class Game {
 
@@ -19,27 +22,25 @@ public class Game {
 	private Player player;
 	private WaveManager waveManager;
 	private UI gameUI;
-	private Menu towerPickerMenu;
-	private Menu backMenu;
-	private Menu StartAndPause;
 	private Texture menuBackGround;
 	private Enemy[] enemyTypes;
+	private Enemy[] enemisBoss;
 	private boolean back_menu = false, replay = false;
-	private int waveNumber = 0;
+	private int waveNumber = 1, start;
 	private int indexMap;
-	private int soLuongQuan = 5;
-	private boolean nextMap = false, priviousMap = false;
+	private int soLuongQuan = 3;
+	private float thoiGian = 3.15f;
+	private boolean nextMap = false, priviousMap = false, startGame = false;
 
 	public Game(TileGrid grid, int indexMap) {
 		this.grid = grid;
 		enemyTypes = new Enemy[3];
+		enemisBoss = new Enemy[1];
 		enemyTypes[0] = new EnemyAlien(grid.getXYStart().x, grid.getXYStart().y, grid);
-		enemyTypes[0].setSpeed(100);
 		enemyTypes[1] = new EnemyUFO(grid.getXYStart().x, grid.getXYStart().y, grid);
-		enemyTypes[1].setSpeed(100);
 		enemyTypes[2] = new EnemyPlane(grid.getXYStart().x, grid.getXYStart().y, grid);
-		enemyTypes[2].setSpeed(100);
-		waveManager = new WaveManager(enemyTypes, 1, soLuongQuan);
+		enemisBoss[0]	= new EnemyBoss(grid.getXYStart().x, grid.getXYStart().y, grid);
+		waveManager = new WaveManager(enemyTypes, (int)thoiGian, soLuongQuan);
 		player = new Player(grid, waveManager);
 		player.setup();
 		this.menuBackGround = QuickLoad("menu_background_2");
@@ -49,11 +50,10 @@ public class Game {
 
 	private void setupUI() {
 		gameUI = new UI();
-		gameUI.createMenu("TowerPicker", 800, 50, 200, 200, 2, 0);
-		towerPickerMenu = gameUI.getMenu("TowerPicker");
-		towerPickerMenu.quickAdd("RedCannon", "cannonRedFull", 40, 40);
-		towerPickerMenu.quickAdd("IceCannon", "cannonIceFull", 40, 40);
-
+		gameUI.addButton("TowerNormal", "TowerNormalFull", 815, 50, 50, 50);
+		gameUI.addButton("TowerSniper", "TowerSniperFull", 875, 50, 50, 50);
+		gameUI.addButton("TowerMachine", "TowerMachineFull", 935, 50, 50, 50);
+		
 		gameUI.addButton("Start", "start", 820, 330, 80, 60);
 		gameUI.addButton("Pause", "pause", 910, 330, 80, 60);
 
@@ -65,32 +65,38 @@ public class Game {
 
 	private void updateUI() {
 		gameUI.draw();
+		gameUI.drawStringSmall(815, 110, "Normal");
+		gameUI.drawStringSmall(875, 110, "Sniper");
+		gameUI.drawStringSmall(935, 110, "Machine");
 		gameUI.drawString(820, 150, "MAP: " + (indexMap + 1));
 		gameUI.drawString(840, 200, "Lives: " + player.Lives);
 		gameUI.drawString(840, 240, "Cash: $" + player.Cash);
-		gameUI.drawString(840, 280, "Wave " + waveManager.getWaveNumber() + "/10");
+		gameUI.drawString(840, 280, "Wave " + waveNumber + "/10");
 		gameUI.drawStringSmall(0, 0, StateManager.framesInLastSecond + " fps");
-		gameUI.drawStringSmall(815, 100, "Tower Red");
-		gameUI.drawStringSmall(900, 100, "Tower Ice");
+		
 
 		if (Mouse.next()) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			if (mouuseClicked) {
-				if (towerPickerMenu.isButtonClicked("RedCannon")) // Bat su kien khi click vao button
-					player.pickTower(new TowerCannonBlue(TowerType.CannonRed, grid.getTile(0, 0),
+				if (gameUI.isButtonClicked("TowerNormal")) // Bat su kien khi click vao button
+					player.pickTower(new TowerSpecies(TowerType.TowerNormal, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
-				if (towerPickerMenu.isButtonClicked("IceCannon")) // bat su kien khi click vao button
-					player.pickTower(new TowerCannonIce(TowerType.CannonIce, grid.getTile(0, 0),
+				if (gameUI.isButtonClicked("TowerSniper")) // Bat su kien khi click vao button
+					player.pickTower(new TowerSpecies(TowerType.TowerSniper, grid.getTile(0, 0),
+							waveManager.getCurrentWave().getEnemyList()));
+				if (gameUI.isButtonClicked("TowerMachine")) // Bat su kien khi click vao button
+					player.pickTower(new TowerSpecies(TowerType.TowerMachine, grid.getTile(0, 0),
 							waveManager.getCurrentWave().getEnemyList()));
 				if (gameUI.isButtonClicked("Menu")) {
 					back_menu = true;
 				}
 				if (gameUI.isButtonClicked("Start")) {
 					Clock.setMultiplier(1);
-					waveNumber = waveManager.getWaveNumber();
-				}
-				if (gameUI.isButtonClicked("Pause")) {
+					start = 1;
+					startGame = true;
+				} else if (gameUI.isButtonClicked("Pause") && startGame == true) {
 					Clock.setMultiplier(0);
+					startGame = false;
 				}
 				if (gameUI.isButtonClicked("NextMap") && waveNumber == 0) {
 					nextMap = true;
@@ -104,14 +110,27 @@ public class Game {
 
 	public void update() {
 		DrawQuadTex(menuBackGround, 800, 0, 200, 600);
+
 		grid.draw();
-		if (waveManager.getWaveNumber() == waveNumber) {
+		if (start == 0) {
+			Clock.setMultiplier(0);
+		}
+		if (waveManager.isComplete() == false) {
 			waveManager.update();
-		} else if (waveNumber == 0) {
+		} else {
+			waveNumber++;
+			if (waveNumber == 5) {
+				waveManager = new WaveManager(enemisBoss, 1, 1);
+			} else if (waveNumber == 10) {
+				waveManager = new WaveManager(enemisBoss, 2, 3);
+			} else {
+				soLuongQuan = soLuongQuan + 2;
+				thoiGian -= 0.15;
+				System.out.println(thoiGian);
+				waveManager = new WaveManager(enemyTypes, (int)thoiGian, soLuongQuan);
+			}
 			Clock.setMultiplier(0);
-		} else if (waveManager.getWaveNumber() > waveNumber && waveNumber !=0) {
-			waveManager = new WaveManager(enemyTypes, 1, soLuongQuan * waveManager.getWaveNumber());
-			Clock.setMultiplier(0);
+			player.setWaveManager(waveManager);
 		}
 
 		player.update();
@@ -119,7 +138,6 @@ public class Game {
 
 		if (GameLose() || GameWin()) {
 			if (GameLose()) {
-				drawGameLose();
 				Clock.setMultiplier(0);
 				gameUI.addButton("GameOver", "lose", 240, 230, 800, 200);
 				gameUI.addButton("Replay", "replay", 275, 400, 140, 50);
@@ -135,7 +153,6 @@ public class Game {
 				}
 			}
 			if (GameWin()) {
-				drawGameWin();
 				Clock.setMultiplier(0);
 				gameUI.addButton("GameWin", "victory", 240, 230, 800, 200);
 				gameUI.addButton("Replay", "replay", 275, 400, 140, 50);
@@ -153,14 +170,6 @@ public class Game {
 		}
 	}
 
-	public void drawGameWin() {
-
-	}
-
-	public void drawGameLose() {
-
-	}
-
 	public boolean GameLose() {
 		if (player.getGameLose())
 			return true;
@@ -168,7 +177,7 @@ public class Game {
 	}
 
 	public boolean GameWin() {
-		if (waveManager.getWaveNumber() > player.livesCount)
+		if (waveNumber > 10) // player.livesCount
 			return true;
 		return false;
 	}

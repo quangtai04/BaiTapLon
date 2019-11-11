@@ -16,8 +16,13 @@ public class SimpleAudioPlayer {
 	Long currentFrame;
 	public static Clip clip;
 
+	// current status of clip
+	String status;
+
 	AudioInputStream audioInputStream;
 	public static String filePath;
+
+	// constructor to initialize streams and clip
 
 	public SimpleAudioPlayer(String filePath) {
 		this.filePath = filePath;
@@ -38,26 +43,35 @@ public class SimpleAudioPlayer {
 		}
 	}
 
+	// Work as the user enters his choice
+
 	// Method to play the audio
 	public void play() {
 		// start the clip
 		clip.start();
+
+		status = "play";
 	}
 
 	// Method to pause the audio
 	public void pause() {
+		if (status.equals("paused")) {
+			System.out.println("audio is already paused");
+			return;
+		}
 		this.currentFrame = this.clip.getMicrosecondPosition();
 		clip.stop();
+		status = "paused";
 	}
-	public void continueMusic()	{
-		clip.setMicrosecondPosition(currentFrame);
-		clip.start();
-	}
+
 	// Method to restart the audio
 	public void restart() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+		clip.stop();
+		clip.close();
+		resetAudioStream();
 		currentFrame = 0L;
 		clip.setMicrosecondPosition(0);
-		clip.start();
+		this.play();
 	}
 
 	// Method to stop the audio

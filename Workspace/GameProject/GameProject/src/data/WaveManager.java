@@ -36,5 +36,10 @@ public class WaveManager {
 	public int getWaveNumber() {
 		return waveNumber;
 	}
-	
+	public boolean isComplete() {
+		return currentWave.isCompleted();
+	}
+	public void setEnemiesPerWave(int enemiesPerWave) {
+		this.enemiesPerWave = enemiesPerWave;
+	}
 }
