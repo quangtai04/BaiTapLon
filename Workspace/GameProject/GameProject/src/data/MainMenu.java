@@ -14,7 +14,7 @@ public class MainMenu {
 	private Texture background;
 	private UI menuUI;
 	private static boolean error = false, clickContinue = false, clickStart = false, checkMusic = true,
-			isClickMusic = false;			//error = true khi gameSave = null, false khi gameSave != null;
+			isClickMusic = false, isClickEdit = false;			//error = true khi gameSave = null, false khi gameSave != null;
 	
 	public MainMenu() {
 		background = QuickLoad("mainmenu");
@@ -24,7 +24,7 @@ public class MainMenu {
 		menuUI.addButton("Editor", "editorButton", WIDTH / 2 - 128, (int) (HEIGHT * 0.6f), 400, 80);
 		menuUI.addButton("Quit", "quitButton", WIDTH / 2 - 128, (int) (HEIGHT * 0.75), 250, 80);
 		menuUI.addButton("Information", "information", 50, 540, 300, 50);
-		menuUI.addButton("Music", "musicOn", 920, 30,70,70);
+		menuUI.addButton("Music", "musicOn", 1080, 30,70,70);
 	}
 
 	// Check if a button is clicked by the user, and if so do an action
@@ -40,7 +40,9 @@ public class MainMenu {
 					clickStart = true;
 					StateManager.setState(GameState.GAME);
 				} else if (menuUI.isButtonClicked("Editor") && Mouse.getEventButtonState()) {
+					isClickEdit = true;
 					StateManager.setState(GameState.EDITOR);
+					
 				} else if (menuUI.isButtonClicked("Quit"))
 					System.exit(0);
 				else if (menuUI.isButtonClicked("Information") && Mouse.getEventButtonState()) {
@@ -49,10 +51,10 @@ public class MainMenu {
 					checkMusic = !checkMusic;
 					if(checkMusic == false)	{
 						menuUI.removeButton("Music");
-						menuUI.addButton("Music", "musicOff", 920, 30,70,70);
+						menuUI.addButton("Music", "musicOff", 1080, 30,70,70);
 					} else {
 						menuUI.removeButton("Music");
-						menuUI.addButton("Music", "musicOn", 920, 30,70,70);
+						menuUI.addButton("Music", "musicOn", 1080, 30,70,70);
 					}
 					isClickMusic = true;
 				}
@@ -61,7 +63,7 @@ public class MainMenu {
 	}
 
 	public void update() {
-		DrawQuadTex(background, 0, 0, 1100, 1030);
+		DrawQuadTex(background, 0, 0, 1200, 1030);
 		menuUI.draw();
 		if (!error)
 			updateButtons();
@@ -70,8 +72,8 @@ public class MainMenu {
 	public void ContinueNull() {
 		if (clickContinue) {
 			error = true;
-			menuUI.addButton("Error", "error", 350, 0);
-			menuUI.addButton("OK", "ok", 440, 120);
+			menuUI.addButton("Error", "error", 430, 0);
+			menuUI.addButton("OK", "ok", 520, 120);
 
 			if (Mouse.isButtonDown(0)) {
 				if (menuUI.isButtonClicked("OK")) {
@@ -115,4 +117,13 @@ public class MainMenu {
 	public boolean getIsClickMusic() {
 		return this.isClickMusic;
 	}
+
+	public static boolean isClickEdit() {
+		return isClickEdit;
+	}
+
+	public static void setClickEdit(boolean isClickEdit) {
+		MainMenu.isClickEdit = isClickEdit;
+	}
+	
 }

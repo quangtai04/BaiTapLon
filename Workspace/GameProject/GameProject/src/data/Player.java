@@ -20,7 +20,7 @@ public class Player {
 	private boolean leftMouseButtonDown, holdingTower;
 	private Tower tempTower;
 	public static int Cash, Lives;
-	public int livesCount = 2, cashCount = 1000;
+	public int livesCount = 5, cashCount = 1000;
 
 	public Player(TileGrid grid, WaveManager waveManager) {
 		this.grid = grid;

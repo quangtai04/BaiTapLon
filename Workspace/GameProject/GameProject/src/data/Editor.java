@@ -22,14 +22,14 @@ public class Editor {
 	private UI editorUI;
 	private Menu buttonMap;
 	private Texture menuBackGround;
-	private boolean back_menu;
+	private boolean back_menu, isSaveMap = true, answerSave = false, isNextMap = false, isBackMap = false, isBackMenu = false;
 	private String mapName = "Map";
-	private static int mapIndex = 0;
+	private int mapIndex = 0;
 
 	public Editor() {
-		this.grid = LoadMap(mapName+Integer.toString(mapIndex));
+		this.grid = LoadMap(mapName + Integer.toString(mapIndex));
 		this.index = 0;
-		this.menuBackGround = QuickLoad("menu_background");
+		this.menuBackGround = QuickLoad("backGround");
 		this.types = new TileType[6];
 		this.types[0] = TileType.Grass;
 		this.types[1] = TileType.Dirt;
@@ -44,29 +44,30 @@ public class Editor {
 	private void setupUI() {
 		editorUI = new UI();
 		editorUI.addButton("Grass", "grass", 830, 20, 50, 50);
-		editorUI.addButton("GrassNot", "grassNot", 930, 20, 50, 50);
+		editorUI.addButton("GrassNot", "grassNot", 950, 20, 50, 50);
+		editorUI.addButton("Water", "water", 1070, 20, 50, 50);
 		editorUI.addButton("Dirt", "dirt", 830, 80, 50, 50);
-		editorUI.addButton("Water", "water", 930, 80, 50, 50);
-		editorUI.addButton("DirtStart", "dirtStart", 830, 140, 50, 50);
-		editorUI.addButton("DirtEnd", "dirtEnd", 930, 140, 50, 50);
-		
-		editorUI.createMenu("Map", 810, 380, 100, 100, 2, 0);
+		editorUI.addButton("DirtStart", "dirtStart", 950, 80, 50, 50);
+		editorUI.addButton("DirtEnd", "dirtEnd", 1070, 80, 50, 50);
+
+		editorUI.createMenu("Map", 830, 270, 200, 100, 2, 0);
 		buttonMap = editorUI.getMenu("Map");
-		buttonMap.quickAdd("backMap", "back", 96, 96,96);
-		buttonMap.quickAdd("nextMap", "next", 96, 96,96);
-		
-		editorUI.addButton("MapAndWave", "MapWave", 805, 320, 350, 60);
-		
-		editorUI.addButton("Clear", "clear",820, 460, 78,78);	
-		editorUI.addButton("Save", "save",920, 460, 70,70);		
-		
-		editorUI.addButton("BackMenu", "HomeMenu", 820, 540, 300, 50);		// button back menu
+		buttonMap.quickAdd("backMap", "back", 96, 96, 96);
+		buttonMap.quickAdd("nextMap", "next", 96, 96, 96);
+
+		editorUI.addButton("MapAndWave", "MapWave", 850, 150, 450, 80);
+
+		editorUI.addButton("Clear", "clear", 820, 380, 78, 78);
+		editorUI.addButton("Save", "save", 920, 380, 70, 70);
+
+		editorUI.addButton("BackMenu", "HomeMenu", 900, 500, 300, 50); // button back menu
 
 	}
 
 	public void update() {
 
 		draw();
+
 		if (Mouse.next()) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			int x = Mouse.getX();
@@ -83,50 +84,58 @@ public class Editor {
 					index = 4;
 				else if (editorUI.isButtonClicked("GrassNot"))
 					index = 5;
-				else if(editorUI.isButtonClicked("Save")) {
-					SaveMap(mapName+Integer.toString(mapIndex), grid);
-				}
-				else if(editorUI.isButtonClicked("Clear")) {
+				else if (editorUI.isButtonClicked("Save")) {
+					SaveMap(mapName + Integer.toString(mapIndex), grid);
+					isSaveMap = true;
+				} else if (editorUI.isButtonClicked("Clear")) {
 					grid = new TileGrid();
-				}
-				else if (editorUI.isButtonClicked("BackMenu"))
-					back_menu = true;
-				else if (buttonMap.isButtonClicked("backMap")) {
-					mapIndex -=1;
-					if(mapIndex<0)mapIndex = 0;
-					this.grid = LoadMap(mapName+Integer.toString(mapIndex));
-					
-				} else if (buttonMap.isButtonClicked("nextMap")) {
-					mapIndex +=1;
-					if(mapIndex>9)mapIndex = 9;	
-					this.grid = LoadMap(mapName+Integer.toString(mapIndex));
+				} else if (editorUI.isButtonClicked("BackMenu")) {
+					isBackMenu = true;
+					if (isSaveMap == false) {
+						answerSave = true;
+					} else
+						back_menu = true;
+				} else if (buttonMap.isButtonClicked("backMap")) {
+					isBackMap = true;
+					if (isSaveMap == false) {
+						answerSave = true;
+					} else {
+						mapIndex -= 1;
+						if (mapIndex < 0)
+							mapIndex = 0;
+						this.grid = LoadMap(mapName + Integer.toString(mapIndex));
+					}
+
+				} else if (buttonMap.isButtonClicked("nextMap") ) {
+					isNextMap = true;
+					if (isSaveMap == false) {
+						answerSave = true;
+					} else {
+						mapIndex += 1;
+						if (mapIndex > 9)
+							mapIndex = 9;
+						this.grid = LoadMap(mapName + Integer.toString(mapIndex));
+					}
+
 				}
 
-				else if (x > 0 && x < 800)
+				else if (x > 0 && x < 800) {
 					setTile();
-				System.out.println(x);
+					isSaveMap = false;
+				}
 			}
 		}
 
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState()) {
-				mapIndex +=1;
-				if(mapIndex>9)mapIndex = 9;	
-				this.grid = LoadMap(mapName+Integer.toString(mapIndex));
-			}
-			if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
-				mapIndex -=1;
-				if(mapIndex<0)mapIndex = 0;
-				this.grid = LoadMap(mapName+Integer.toString(mapIndex));
-			}
+		if (answerSave == true) {
+			AnswerSaveMap();
 		}
 	}
 
 	private void draw() {
-		DrawQuadTex(menuBackGround, 800, 0, 200, 600);
+		DrawQuadTex(menuBackGround, 800, 0, 360, 1150);
 		grid.draw();
 		editorUI.draw();
-		editorUI.drawString(870, 330, "Map: "+ (mapIndex+1));
+		editorUI.drawString(920, 170, "Map: " + (mapIndex + 1) + "/10");
 	}
 
 	private void setTile() {
@@ -140,5 +149,40 @@ public class Editor {
 
 	public void setBackMenu(boolean back_menu) {
 		this.back_menu = back_menu;
+	}
+
+	public void AnswerSaveMap() {
+		editorUI.addButton("Answer", "SaveMap", 200, 150);
+		editorUI.addButton("Yes", "yes", 200, 300, 150, 60);
+		editorUI.addButton("No", "no", 500, 300, 150, 60);
+		if (Mouse.isButtonDown(0) ) {
+			if (editorUI.isButtonClicked("Yes")) {
+				SaveMap(mapName + Integer.toString(mapIndex), grid);
+			}
+			if (editorUI.isButtonClicked("Yes") || editorUI.isButtonClicked("No")) {
+				isSaveMap = true;
+				editorUI.removeButton("Answer");
+				editorUI.removeButton("Yes");
+				editorUI.removeButton("No");
+				if (isBackMap) {
+					mapIndex -= 1;
+					if (mapIndex < 0)
+						mapIndex = 0;
+					this.grid = LoadMap(mapName + Integer.toString(mapIndex));
+					answerSave = false;
+				} else if (isNextMap) {
+					mapIndex += 1;
+					if (mapIndex > 9)
+						mapIndex = 9;
+					this.grid = LoadMap(mapName + Integer.toString(mapIndex));
+				}
+				if(isBackMenu)	{
+					back_menu = true;
+				}
+				isBackMap = false;
+				isNextMap = false;
+			}
+
+		}
 	}
 }

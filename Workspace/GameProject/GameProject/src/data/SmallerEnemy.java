@@ -6,7 +6,7 @@ public class SmallerEnemy extends Enemy {
 		super(tileX, tileY, grid);
 		this.setTexture("SmallerEnemy");
 		this.setHealth(50);
-		this.setSpeed(120);
+		this.setSpeed(150);
 		
 	}
 }

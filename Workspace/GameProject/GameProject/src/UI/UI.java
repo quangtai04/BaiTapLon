@@ -25,7 +25,7 @@ public class UI {
 		font = new TrueTypeFont(awtFont, false);
 		awtFontSmall = new Font("Times New Roman", Font.BOLD, 15);
 		fontSmall = new TrueTypeFont(awtFontSmall, false);
-		awtFontBig = new Font("Times New Roman", Font.BOLD, 50);
+		awtFontBig = new Font("Times New Roman", Font.BOLD, 40);
 		fontBig = new TrueTypeFont(awtFontBig, false);
 	}
 

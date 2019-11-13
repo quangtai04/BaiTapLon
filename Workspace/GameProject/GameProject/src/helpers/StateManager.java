@@ -29,7 +29,6 @@ public class StateManager {
 	public static long nextSecond = System.currentTimeMillis() + 1000;
 	public static int framesInLastSecond = 0;
 	public static int framesInCurrentSecond = 0;
-	private static boolean start = true;
 	static TileGrid map;
 	private static int levelMap = 0, levelMapSave = 0;
 
@@ -126,8 +125,10 @@ public class StateManager {
 			break;
 
 		case EDITOR:						// Sua Map Game
-			if (editor == null)
+			if (editor == null || mainMenu.isClickEdit())	{
 				editor = new Editor();
+				mainMenu.setClickEdit(false);
+			}
 			editor.update();
 			if (editor.getBackMenu() == true) {
 				gameState = GameState.MAINMENU;

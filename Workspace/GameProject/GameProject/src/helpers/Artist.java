@@ -25,7 +25,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class Artist {													// Class ve
-	public static final int WIDTH = 1000, HEIGHT = 600;
+	public static final int WIDTH = 1150, HEIGHT = 600;
 	public static final int TILE_SIZE = 40;
 
 	public static void BeginSession() {
