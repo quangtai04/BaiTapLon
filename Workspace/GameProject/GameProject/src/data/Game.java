@@ -141,8 +141,8 @@ public class Game {
 					X1Enable = true;
 					gameUI.removeButton("X1");
 					gameUI.removeButton("X2Enable");
-					gameUI.addButton("X1", "X1Enable", 840, 430, 50, 50);
-					gameUI.addButton("X2", "X2", 920, 430, 50, 50);
+					gameUI.addButton("X1", "X1Enable", 920, 430, 50, 50);
+					gameUI.addButton("X2", "X2", 1000, 430, 50, 50);
 					multiplier = 1;
 					if (startGame == true) {
 						StartGame();
@@ -151,7 +151,7 @@ public class Game {
 					X1Enable = false;
 					gameUI.removeButton("X1Enable");
 					gameUI.removeButton("X2");
-					gameUI.addButton("X1", "X1", 920, 430, 50, 50);
+					gameUI.addButton("X1", "X1",  920, 430, 50, 50);
 					gameUI.addButton("X2", "X2Enable", 1000, 430, 50, 50);
 					multiplier = 2;
 					if (startGame) {
@@ -201,7 +201,15 @@ public class Game {
 		if (start == 0) { // Dung tro choi khi bat dau
 			Clock.setMultiplier(0);
 		}
-		if (waveManager.isComplete() == false) {
+		if (GameLose() || GameWin()) { // Xu li Game Lose hoac Game Win
+			if (GameLose()) {
+				PlayGameLose();
+			}
+			if (GameWin()) {
+				PlayGameWin();
+			}
+		}
+		else if (waveManager.isComplete() == false) {
 			waveManager.update(); // Neu waveMange chua hoan thanh thi Update
 		} else {
 			waveNumber++;
@@ -212,6 +220,7 @@ public class Game {
 			} else {
 				soLuongQuan = soLuongQuan + 2; // So luong quan tang theo moi man choi
 				thoiGian -= 0.15; // Thoi gian giua 2 quan linh giam dan theo thoi gian
+				if(thoiGian<2) thoiGian = 2;
 				System.out.println(thoiGian);
 				waveManager = new WaveManager(enemyTypes, (int) thoiGian, soLuongQuan);
 			}
@@ -219,15 +228,6 @@ public class Game {
 			startGame = false;
 			waveManager.setIsAudio(isAudio);
 			player.setWaveManager(waveManager);
-		}
-
-		if (GameLose() || GameWin()) { // Xu li Game Lose hoac Game Win
-			if (GameLose()) {
-				PlayGameLose();
-			}
-			if (GameWin()) {
-				PlayGameWin();
-			}
 		}
 
 		if (isDestroyCancel) {
@@ -362,7 +362,7 @@ public class Game {
 	}
 
 	public boolean GameWin() { // Tra ve true neu Game Win, false trong truong hopw con lai
-		if (waveNumber > player.livesCount) // player.livesCount
+		if (waveNumber > 10) 
 			return true;
 		return false;
 	}

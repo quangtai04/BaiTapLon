@@ -5,9 +5,9 @@ import static helpers.Artist.*;
 import org.newdawn.slick.opengl.Texture;
 
 public enum TowerType {
-	TowerNormal(new Texture[] { QuickLoad("Tower"), QuickLoad("NormalGun") },ProjectileType.CannonBall, 15, 240, 2, 10),
-	TowerSniper(new Texture[] { QuickLoad("Tower"), QuickLoad("SniperGun") },ProjectileType.CannonBall, 15, 160, 1, 10),
-	TowerMachine(new Texture[] { QuickLoad("Tower"), QuickLoad("MachineGun") },ProjectileType.CannonBall, 15, 360, 3, 10);
+	TowerNormal(new Texture[] { QuickLoad("Tower"), QuickLoad("NormalGun") },ProjectileType.CannonBall, 10, 240, 3, 25),
+	TowerSniper(new Texture[] { QuickLoad("Tower"), QuickLoad("SniperGun") },ProjectileType.CannonBall, 10, 160, 2, 25),
+	TowerMachine(new Texture[] { QuickLoad("Tower"), QuickLoad("MachineGun") },ProjectileType.CannonBall, 10, 360, 4, 25);
 
 	Texture[] textures;
 	ProjectileType projectileType;

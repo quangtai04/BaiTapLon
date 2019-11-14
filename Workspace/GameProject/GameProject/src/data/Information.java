@@ -80,14 +80,14 @@ public class Information {
 		aboutUI.drawStringSmall(750, 275, "Boss");
 
 		aboutUI.drawStringSmall(850, 125, "75");
-		aboutUI.drawStringSmall(850, 177, "50");
-		aboutUI.drawStringSmall(850, 225, "100");
-		aboutUI.drawStringSmall(850, 275, "400");
+		aboutUI.drawStringSmall(850, 177, "55");
+		aboutUI.drawStringSmall(850, 225, "105");
+		aboutUI.drawStringSmall(850, 275, "405");
 
-		aboutUI.drawStringSmall(950, 125, "80");
+		aboutUI.drawStringSmall(950, 125, "90");
 		aboutUI.drawStringSmall(950, 175, "120");
-		aboutUI.drawStringSmall(950, 225, "50");
-		aboutUI.drawStringSmall(950, 275, "40");
+		aboutUI.drawStringSmall(950, 225, "60");
+		aboutUI.drawStringSmall(950, 275, "50");
 
 		aboutUI.drawStringSmall(120, 280, "Damage to the enemy: 10");
 

@@ -57,10 +57,10 @@ public class Editor {
 
 		editorUI.addButton("MapAndWave", "MapWave", 850, 150, 450, 80);
 
-		editorUI.addButton("Clear", "clear", 820, 380, 78, 78);
-		editorUI.addButton("Save", "save", 920, 380, 70, 70);
+		editorUI.addButton("Clear", "clear", 890, 380, 78, 78);
+		editorUI.addButton("Save", "save", 990, 380, 70, 70);
 
-		editorUI.addButton("BackMenu", "HomeMenu", 900, 500, 300, 50); // button back menu
+		editorUI.addButton("BackMenu", "HomeMenu", 890, 500, 300, 50); // button back menu
 
 	}
 
@@ -89,6 +89,7 @@ public class Editor {
 					isSaveMap = true;
 				} else if (editorUI.isButtonClicked("Clear")) {
 					grid = new TileGrid();
+					isSaveMap = false;
 				} else if (editorUI.isButtonClicked("BackMenu")) {
 					isBackMenu = true;
 					if (isSaveMap == false) {
@@ -175,6 +176,7 @@ public class Editor {
 					if (mapIndex > 9)
 						mapIndex = 9;
 					this.grid = LoadMap(mapName + Integer.toString(mapIndex));
+					answerSave = false;
 				}
 				if(isBackMenu)	{
 					back_menu = true;

@@ -23,7 +23,7 @@ public class TowerSniper extends Tower {
 	@Override
 	public void shoot(Enemy target) {
 		super.projectiles.add(
-				new ProjectileCannonball(super.type.projectileType, super.target, super.getX(), super.getY(), 20, 20));
+				new Projectileball(super.type.projectileType, super.target, super.getX(), super.getY(), 20, 20));
 		super.target.reduceHiddenHealth(super.type.projectileType.damage);
 	}
 }
