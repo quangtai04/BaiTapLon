@@ -8,6 +8,7 @@ import UI.UI.Menu;
 import helpers.Clock;
 
 import static helpers.Artist.*;
+import static helpers.Leveler.*;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class Player {
 	private ArrayList<Tower> towerList;
 	private boolean leftMouseButtonDown, holdingTower;
 	private Tower tempTower;
-	public static int Cash, Lives;
+	public static int Cash, Lives, numberMap;
 	public int livesCount = 5, cashCount = 100;
 
 	public Player(TileGrid grid, WaveManager waveManager) {
@@ -38,6 +39,7 @@ public class Player {
 		this.tempTower = null;
 		Cash = 0;
 		Lives = 0;
+		numberMap = LoadNumberMap();
 	}
 
 	// Cai dat Cash va Lives
@@ -159,5 +161,12 @@ public class Player {
 	}
 	public Tower getTempTower()	{
 		return this.tempTower;
+	}
+	public int getNumberMap()	{
+		return numberMap;
+	}
+	public void setNumberMap(int numberMap) {
+		this.numberMap = numberMap;
+		SaveNumberMap(numberMap);
 	}
 }

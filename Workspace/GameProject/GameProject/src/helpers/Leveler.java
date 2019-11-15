@@ -48,6 +48,58 @@ public class Leveler {
 		}
 		return grid;
 	}
+	public static int LoadNumberMap ()	{
+		int numberMap = 10;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("NumberMap"));
+			String data = br.readLine();
+			numberMap = Integer.parseInt(data);
+			br.close();
+		} catch (Exception e) {
+			try {
+				File file = new File("NumberMap");
+				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+				bw.write(10);
+				bw.close();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		return numberMap;
+	}
+	
+	public static void SaveNumberMap (int numberMap)	{
+		String data = Integer.toString(numberMap);
+		try {
+			File file = new File("NumberMap");
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			bw.write(data);
+			bw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void DeleteMap(int indexMap)	{
+		int numberMap = LoadNumberMap();
+		try {
+			for(int i = indexMap+1; i< numberMap; i++) {
+				String data = "";
+				BufferedReader br = new BufferedReader(new FileReader(new File("Map"+Integer.toString(i))));
+				data = br.readLine();
+				br.close();
+				BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Map" + Integer.toString(i-1))));
+				bw.write(data);
+				bw.close();
+			}
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Map" + Integer.toString(numberMap-1))));
+			bw.write("");
+			bw.close();
+			SaveNumberMap(numberMap-1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static TileType getTileType(String ID) {
 		TileType type = TileType.NULL;

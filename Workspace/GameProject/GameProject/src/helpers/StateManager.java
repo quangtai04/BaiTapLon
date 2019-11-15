@@ -15,7 +15,8 @@ import org.lwjgl.input.Mouse;
 public class StateManager {
 	private static SimpleAudioPlayer simpleAudioPlayer = new SimpleAudioPlayer(
 			"C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\nhacnen.wav");
-
+	private static int numberMap = LoadNumberMap() - 1;
+	
 	public static enum GameState {
 		MAINMENU, CONTINUE, GAME, EDITOR, INFORMATION
 	}
@@ -53,9 +54,10 @@ public class StateManager {
 			mainMenu.update();
 			break;
 		case CONTINUE:
-			if (gameSave == null) {				// Neu gameSave == null , thong bao loi 
+			if (gameSave == null) {				// Neu gameSave == null , thong bao loi
 				mainMenu.ContinueNull();
 			} else {							// Nguoc lai thi chuyen sang Game
+				numberMap = LoadNumberMap() - 1;
 				setState(GameState.GAME);
 			}
 			mainMenu.update();
@@ -68,6 +70,7 @@ public class StateManager {
 			}
 			
 			if (game == null || mainMenu.getClickStart()) {			// Neu click Start game, bat dau game moi
+				numberMap = LoadNumberMap() - 1;
 				levelMap = 0;
 				map = LoadMap("Map" + Integer.toString(levelMap));
 				game = new Game(map, levelMap);
@@ -90,12 +93,12 @@ public class StateManager {
 			if (game.getNextMap()) {
 				game.setNextMap(false);
 				levelMap++;
-				if (levelMap > 9)
-					levelMap = 9;
+				if (levelMap > numberMap)
+					levelMap = 0;
 				map = LoadMap("Map" + Integer.toString(levelMap));
 				if(game.GameWin()) {				// Game win
 					game = new Game(map, levelMap);
-					game.setStartedGame(true);		// Khong cho chuyen man choi
+//					game.setStartedGame(true);		// Khong cho chuyen man choi
 				}
 				else {
 					game = new Game(map, levelMap);
@@ -106,7 +109,7 @@ public class StateManager {
 				game.setPriviousMap(false);
 				levelMap--;
 				if (levelMap < 0)
-					levelMap = 0;
+					levelMap = numberMap;
 				map = LoadMap("Map" + Integer.toString(levelMap));
 				game = new Game(map, levelMap);
 			}

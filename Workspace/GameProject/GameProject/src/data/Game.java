@@ -61,11 +61,6 @@ public class Game {
 		gameUI.addButton("Cash", "Cash", 1010, 210, 150, 60);
 		gameUI.addButton("Wave", "MapWave", 900, 280);
 
-//		gameUI.addButton("SaveGame", "save", 820, 495, 60, 60); // Button save Game
-//		gameUI.addButton("Replay", "replay", 880, 495, 90, 60); // Button replay game
-//		gameUI.addButton("Start", "start_off", 980, 495, 80, 60); // Button Start
-//		gameUI.addButton("Pause", "pause_on", 1070, 495, 80, 60); // Button Pause
-
 		gameUI.addButton("Start", "start_off", 820, 495, 80, 60); // Button save Game
 		gameUI.addButton("Pause", "pause_on", 900, 495, 80, 60); // Button replay game
 		gameUI.addButton("Replay", "replay", 980, 495, 90, 60); // Button Start
@@ -88,7 +83,7 @@ public class Game {
 		gameUI.drawStringSmall(1050, 180, "$25");
 
 		gameUI.drawStringBig(920, 30, "MAP  " + (indexMap + 1));
-		gameUI.drawString(930, 290, "Wave " + Integer.toString(waveNumber) + " /10");
+		gameUI.drawString(930, 290, "Wave " + Integer.toString(waveNumber) + " / 10");
 		gameUI.drawString(890, 220, "" + player.Lives + " / " + player.livesCount);
 		gameUI.drawString(1060, 220, "" + player.Cash);
 
@@ -262,8 +257,8 @@ public class Game {
 
 		}
 
-		gameUI.addButton("Destroy", "destroy", 980, 350, 70, 50);
-		gameUI.addButton("Cancel", "cancel", 1060, 350, 70, 50);
+		gameUI.addButton("Destroy", "destroy", 940, 350, 90, 50);
+		gameUI.addButton("Cancel", "cancel", 1050, 350, 90, 50);
 
 		if (tower == null) {
 			gameUI.removeButton("Destroy");

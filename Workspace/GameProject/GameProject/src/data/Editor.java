@@ -22,9 +22,10 @@ public class Editor {
 	private UI editorUI;
 	private Menu buttonMap;
 	private Texture menuBackGround;
-	private boolean back_menu, isSaveMap = true, answerSave = false, isNextMap = false, isBackMap = false, isBackMenu = false;
+	private boolean back_menu, isSaveMap = true, answerSave = false, isNextMap = false, isBackMap = false,
+			isBackMenu = false, isAddMap = false, isDeleteMap = false;
 	private String mapName = "Map";
-	private int mapIndex = 0;
+	private int mapIndex = 0, numberMap = 9;
 
 	public Editor() {
 		this.grid = LoadMap(mapName + Integer.toString(mapIndex));
@@ -38,6 +39,9 @@ public class Editor {
 		this.types[4] = TileType.DirtEnd;
 		this.types[5] = TileType.GrassNot;
 		this.back_menu = false;
+		this.numberMap = LoadNumberMap() - 1;
+		if (numberMap < 0)
+			numberMap = 0;
 		setupUI();
 	}
 
@@ -50,18 +54,22 @@ public class Editor {
 		editorUI.addButton("DirtStart", "dirtStart", 950, 80, 50, 50);
 		editorUI.addButton("DirtEnd", "dirtEnd", 1070, 80, 50, 50);
 
-		editorUI.createMenu("Map", 830, 270, 200, 100, 2, 0);
+		editorUI.createMenu("Map", 830, 240, 200, 100, 2, 0);
 		buttonMap = editorUI.getMenu("Map");
 		buttonMap.quickAdd("backMap", "back", 96, 96, 96);
 		buttonMap.quickAdd("nextMap", "next", 96, 96, 96);
 
 		editorUI.addButton("MapAndWave", "MapWave", 850, 150, 450, 80);
 
-		editorUI.addButton("Clear", "clear", 890, 380, 78, 78);
-		editorUI.addButton("Save", "save", 990, 380, 70, 70);
+		editorUI.addButton("AddMap", "newMap", 890, 330, 300, 60);
+		editorUI.addButton("DeleteMap", "deleteMap", 890, 390, 300, 60);
 
-		editorUI.addButton("BackMenu", "HomeMenu", 890, 500, 300, 50); // button back menu
+		editorUI.addButton("Clear", "clear", 890, 460, 78, 78);
+		editorUI.addButton("Save", "save", 990, 460, 70, 70);
 
+		editorUI.addButton("BackMenu", "HomeMenu", 890, 530, 300, 50); // button back menu
+
+		editorUI.addButton("Selected", "selected", 830, 20, 50, 50);
 	}
 
 	public void update() {
@@ -72,21 +80,37 @@ public class Editor {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			int x = Mouse.getX();
 			if (mouuseClicked) {
-				if (editorUI.isButtonClicked("Grass")) // Bat su kien khi click vao button
+				if (editorUI.isButtonClicked("Grass")) {// Bat su kien khi click vao button
 					index = 0;
-				else if (editorUI.isButtonClicked("Dirt"))
+					editorUI.removeButton("Selected");
+					editorUI.addButton("Selected", "selected", 830, 20, 50, 50);
+				} else if (editorUI.isButtonClicked("Dirt")) {
 					index = 1;
-				else if (editorUI.isButtonClicked("Water"))
+					editorUI.removeButton("Selected");
+					editorUI.addButton("Selected", "selected", 830, 80, 50, 50);
+				} else if (editorUI.isButtonClicked("Water")) {
 					index = 2;
-				else if (editorUI.isButtonClicked("DirtStart"))
+					editorUI.removeButton("Selected");
+					editorUI.addButton("Selected", "selected", 1070, 20, 50, 50);
+				} else if (editorUI.isButtonClicked("DirtStart")) {
 					index = 3;
-				else if (editorUI.isButtonClicked("DirtEnd"))
+					editorUI.removeButton("Selected");
+					editorUI.addButton("Selected", "selected", 950, 80, 50, 50);
+				} else if (editorUI.isButtonClicked("DirtEnd")) {
 					index = 4;
-				else if (editorUI.isButtonClicked("GrassNot"))
+					editorUI.removeButton("Selected");
+					editorUI.addButton("Selected", "selected", 1070, 80, 50, 50);
+				} else if (editorUI.isButtonClicked("GrassNot")) {
 					index = 5;
-				else if (editorUI.isButtonClicked("Save")) {
+					editorUI.removeButton("Selected");
+					editorUI.addButton("Selected", "selected", 950, 20, 50, 50);
+				} else if (editorUI.isButtonClicked("Save")) {
 					SaveMap(mapName + Integer.toString(mapIndex), grid);
 					isSaveMap = true;
+					if (isAddMap == true) {
+						SaveNumberMap(numberMap + 1);
+						isAddMap = false;
+					}
 				} else if (editorUI.isButtonClicked("Clear")) {
 					grid = new TileGrid();
 					isSaveMap = false;
@@ -103,32 +127,46 @@ public class Editor {
 					} else {
 						mapIndex -= 1;
 						if (mapIndex < 0)
-							mapIndex = 0;
+							mapIndex = numberMap;
 						this.grid = LoadMap(mapName + Integer.toString(mapIndex));
 					}
 
-				} else if (buttonMap.isButtonClicked("nextMap") ) {
+				} else if (buttonMap.isButtonClicked("nextMap")) {
 					isNextMap = true;
 					if (isSaveMap == false) {
 						answerSave = true;
 					} else {
 						mapIndex += 1;
-						if (mapIndex > 9)
-							mapIndex = 9;
+						if (mapIndex > numberMap)
+							mapIndex = 0;
 						this.grid = LoadMap(mapName + Integer.toString(mapIndex));
 					}
+				} else if (editorUI.isButtonClicked("AddMap")) {
+					isAddMap = true;
+					grid = new TileGrid();
+					numberMap++;
+					mapIndex = numberMap;
+					isSaveMap = false;
 
-				}
-
-				else if (x > 0 && x < 800) {
+				} else if (editorUI.isButtonClicked("DeleteMap")) {
+					isDeleteMap = true;
+				} else if (x > 0 && x < 800 && index != -1) {
 					setTile();
 					isSaveMap = false;
 				}
 			}
 		}
+		if (Keyboard.next())
+			if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+				index = -1;
+				editorUI.removeButton("Selected");
+			}
 
 		if (answerSave == true) {
 			AnswerSaveMap();
+		}
+		if (isDeleteMap == true) {
+			deleteMap();
 		}
 	}
 
@@ -136,7 +174,7 @@ public class Editor {
 		DrawQuadTex(menuBackGround, 800, 0, 360, 1150);
 		grid.draw();
 		editorUI.draw();
-		editorUI.drawString(920, 170, "Map: " + (mapIndex + 1) + "/10");
+		editorUI.drawString(920, 170, "Map: " + (mapIndex + 1) + " / " + Integer.toString(numberMap + 1));
 	}
 
 	private void setTile() {
@@ -156,9 +194,21 @@ public class Editor {
 		editorUI.addButton("Answer", "SaveMap", 200, 150);
 		editorUI.addButton("Yes", "yes", 200, 300, 150, 60);
 		editorUI.addButton("No", "no", 500, 300, 150, 60);
-		if (Mouse.isButtonDown(0) ) {
+		if (Mouse.isButtonDown(0)) {
 			if (editorUI.isButtonClicked("Yes")) {
 				SaveMap(mapName + Integer.toString(mapIndex), grid);
+				if (isAddMap == true) {
+					isAddMap = false;
+					SaveNumberMap(numberMap + 1);
+					System.out.println(numberMap);
+				}
+			} else if (editorUI.isButtonClicked("No")) {
+				if (isAddMap == true) {
+					isAddMap = false;
+					numberMap--;
+					if (numberMap < 0)
+						numberMap = 0;
+				}
 			}
 			if (editorUI.isButtonClicked("Yes") || editorUI.isButtonClicked("No")) {
 				isSaveMap = true;
@@ -168,23 +218,51 @@ public class Editor {
 				if (isBackMap) {
 					mapIndex -= 1;
 					if (mapIndex < 0)
+						mapIndex = numberMap;
+					this.grid = LoadMap(mapName + Integer.toString(mapIndex));
+					answerSave = false;
+					isBackMap = false;
+				} else if (isNextMap) {
+					mapIndex += 1;
+					if (mapIndex > numberMap)
 						mapIndex = 0;
 					this.grid = LoadMap(mapName + Integer.toString(mapIndex));
 					answerSave = false;
-				} else if (isNextMap) {
-					mapIndex += 1;
-					if (mapIndex > 9)
-						mapIndex = 9;
-					this.grid = LoadMap(mapName + Integer.toString(mapIndex));
-					answerSave = false;
+					isNextMap = false;
 				}
-				if(isBackMenu)	{
+				if (isBackMenu) {
 					back_menu = true;
 				}
-				isBackMap = false;
-				isNextMap = false;
 			}
 
+		}
+	}
+
+	public void deleteMap() {
+		editorUI.addButton("AnswerDeleteMap", "answerDelete", 200, 150);
+		editorUI.addButton("Yes", "yes", 200, 300, 150, 60);
+		editorUI.addButton("No", "no", 500, 300, 150, 60);
+		if (Mouse.isButtonDown(0)) {
+			if (editorUI.isButtonClicked("Yes")) {
+				DeleteMap(mapIndex);
+				numberMap--;
+				if (numberMap < 0)
+					numberMap = 0;
+				mapIndex++;
+				if (mapIndex > numberMap) {
+					mapIndex = 0;
+				}
+				grid = LoadMap(mapName + Integer.toString(mapIndex));
+				isDeleteMap = false;
+				isSaveMap = true;
+			} else if (editorUI.isButtonClicked("No")) {
+				isDeleteMap = false;
+			}
+			if (editorUI.isButtonClicked("Yes") || editorUI.isButtonClicked("No")) {
+				editorUI.removeButton("AnswerDeleteMap");
+				editorUI.removeButton("Yes");
+				editorUI.removeButton("No");
+			}
 		}
 	}
 }
