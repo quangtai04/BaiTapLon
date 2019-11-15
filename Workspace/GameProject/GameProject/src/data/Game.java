@@ -95,6 +95,8 @@ public class Game {
 
 				int MouseX = Mouse.getX() / TILE_SIZE, MouseY = (HEIGHT - Mouse.getY() - 1) / TILE_SIZE;
 				if (MouseX < 20 && MouseY < 15) {
+					if(MouseX !=x || MouseY !=y) 
+						gameUI.removeButton("SelectedTower");	
 					x = MouseX;
 					y = MouseY;
 					Tile tile = grid.getTile(x, y);
@@ -254,6 +256,7 @@ public class Game {
 		if (grid.getTile(x, y).getType() == TileType.Grass && tower != null && towerTemp == null) {
 			gameUI.drawString(810, 350, player.findTower(x, y).getTowerType().getTowerType());
 			gameUI.drawString(810, 370, " ( " + x + "; " + y + " ) ");
+			gameUI.addButton("SelectedTower", "selected", x*TILE_SIZE, y*TILE_SIZE, 40, 40);
 
 		}
 
@@ -263,6 +266,7 @@ public class Game {
 		if (tower == null) {
 			gameUI.removeButton("Destroy");
 			gameUI.removeButton("Cancel");
+			gameUI.removeButton("SelectedTower");
 		}
 		if (Mouse.isButtonDown(0) && tower != null) {
 			if (gameUI.isButtonClicked("Destroy") && Mouse.getEventButtonState()) {
@@ -271,11 +275,13 @@ public class Game {
 				System.out.println("Destroy");
 				gameUI.removeButton("Destroy");
 				gameUI.removeButton("Cancel");
+				gameUI.removeButton("SelectedTower");
 				isDestroyCancel = false;
 			} else if (gameUI.isButtonClicked("Cancel") && Mouse.getEventButtonState()) {
 				System.out.println("Cancel");
 				gameUI.removeButton("Destroy");
 				gameUI.removeButton("Cancel");
+				gameUI.removeButton("SelectedTower");
 				isDestroyCancel = false;
 			}
 		}
