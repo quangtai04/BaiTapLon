@@ -7,10 +7,11 @@ import static helpers.Artist.*;
 public abstract class Projectile implements Entity{		// Xu li dan
 
 	private Texture texture;
-	private float x, y, speed,xVelocity,yVelocity;
+	private float x, y, speed,xVelocity,yVelocity;		// Velocity: van toc
 	private int damage,width,height;
 	private Enemy  target;
     private boolean alive;
+    
 	public Projectile(ProjectileType type, Enemy target, float x, float y, int width, int height) {
 		this.texture = type.texture;
 		this.x = x;
@@ -42,7 +43,7 @@ public abstract class Projectile implements Entity{		// Xu li dan
 		}
 	}
 	
-	// Deal damage to Enemy
+	// Gay sat thuong cho quan dich
 	public void damage() {
 		target.damage(damage);
 		alive = false;
@@ -52,7 +53,7 @@ public abstract class Projectile implements Entity{		// Xu li dan
 			calculateDirection();
 		  x += xVelocity*speed *Delta();
 		  y += yVelocity*speed *Delta(); 
-		  if(CheckCollision(x, y, width, height, target.getX(), target.getY(), target.getWidth(), target.getHeight()))
+		  if(CheckCollision(x, y, width, height, target.getX(), target.getY(), target.getWidth(), target.getHeight()))	//Kiem tra xem dan da den vi tri cua enemy chua
 		     damage();
 		  draw();
 		}

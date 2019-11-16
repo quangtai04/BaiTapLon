@@ -46,8 +46,7 @@ public abstract class Tower implements Entity {
 				closest = e;
 			}
 		}
-		//If an enemy exists and is returned, targeted == true
-		if (closest != null)
+		if (closest != null)		// Neu ton tai Enemy targeted = false; nguoc lai targeted = false
 			targeted = true;
 		return closest;
 	}
@@ -65,7 +64,6 @@ public abstract class Tower implements Entity {
 		return (float) Math.toDegrees(angleTemp) - 90;
 	}
 
-	//Abstract method for 'shoot', must be overriden in subclasses
 	public abstract void shoot(Enemy target) ;
 
 	public void updateEnemyList(CopyOnWriteArrayList<Enemy> newList) {

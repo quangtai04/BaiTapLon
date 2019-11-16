@@ -260,8 +260,8 @@ public class Game {
 
 		}
 
-		gameUI.addButton("Destroy", "destroy", 940, 350, 90, 50);
-		gameUI.addButton("Cancel", "cancel", 1050, 350, 90, 50);
+		gameUI.addButton("Destroy", "destroy", 940, 350, 110, 50);
+		gameUI.addButton("Cancel", "cancel", 1050, 350, 110, 50);
 
 		if (tower == null) {
 			gameUI.removeButton("Destroy");
@@ -270,6 +270,7 @@ public class Game {
 		}
 		if (Mouse.isButtonDown(0) && tower != null) {
 			if (gameUI.isButtonClicked("Destroy") && Mouse.getEventButtonState()) {
+				player.modifyCash(12);
 				player.removeTower(x, y);
 				grid.getTile(x, y).setOccupied(false);
 				System.out.println("Destroy");

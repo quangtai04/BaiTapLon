@@ -27,7 +27,6 @@ public class MainMenu {
 		menuUI.addButton("Music", "musicOn", 1080, 30,70,70);
 	}
 
-	// Check if a button is clicked by the user, and if so do an action
 	private void updateButtons() {
 		if (Mouse.next()) {
 			if (Mouse.isButtonDown(0)) {
