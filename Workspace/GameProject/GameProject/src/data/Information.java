@@ -4,6 +4,8 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.opengl.Texture;
 
 import UI.UI;
+import helpers.Clock;
+import helpers.SimpleAudioPlayer;
 import helpers.StateManager;
 import helpers.StateManager.GameState;
 
@@ -12,6 +14,9 @@ import static helpers.Artist.*;
 public class Information {
 	private Texture backGround;
 	private UI aboutUI;
+	private boolean isAudio = true;
+	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\click.wav");
+	private long totalTimeLastClick = 0;
 
 	public Information() {
 		backGround = QuickLoad("backGroundInformation");
@@ -32,6 +37,7 @@ public class Information {
 		WriteInformation();
 		if (Mouse.next())
 			if (Mouse.isButtonDown(0)) {
+				PlayClickButton();
 				if (aboutUI.isButtonClicked("BackMenu")) {
 					StateManager.setState(GameState.MAINMENU); // Neu click back menu, quay lai Menu
 				}
@@ -42,7 +48,7 @@ public class Information {
 		DrawQuadTex(backGround, 0, 0, 1300, 1200);
 		aboutUI.draw();
 		updateButton();
-
+		PauseClickButton();
 	}
 
 	public void WriteInformation() {
@@ -98,5 +104,24 @@ public class Information {
 		aboutUI.drawString(50, 560, "LE DUC THANG - 18021160 - K63T");
 
 	}
+	private void PlayClickButton() {
+		if(isAudio)	{
+			clickMouse.restart();
+			totalTimeLastClick = Clock.getTime();
+		}
+	}
+	private void PauseClickButton()	{
+		if(Clock.getTime() - totalTimeLastClick > 1000)	{
+			clickMouse.pause();
+		}
+	}
 
+	public boolean isAudio() {
+		return isAudio;
+	}
+
+	public void setAudio(boolean isAudio) {
+		this.isAudio = isAudio;
+	}
+	
 }

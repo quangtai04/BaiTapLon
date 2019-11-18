@@ -5,6 +5,7 @@ import org.newdawn.slick.opengl.Texture;
 
 import UI.UI;
 import helpers.Clock;
+import helpers.SimpleAudioPlayer;
 import helpers.StateManager;
 import helpers.StateManager.GameState;
 
@@ -14,7 +15,9 @@ public class MainMenu {
 	private Texture background;
 	private UI menuUI;
 	private static boolean error = false, clickContinue = false, clickStart = false, checkMusic = true,
-			isClickMusic = false, isClickEdit = false;			//error = true khi gameSave = null, false khi gameSave != null;
+			isClickMusic = false, isClickEdit = false, isClickInformation = false;			//error = true khi gameSave = null, false khi gameSave != null;
+	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\click.wav");
+	private long totalTimeLastClick = 0;
 	
 	public MainMenu() {
 		background = QuickLoad("mainmenu");
@@ -30,9 +33,11 @@ public class MainMenu {
 	private void updateButtons() {
 		if (Mouse.next()) {
 			if (Mouse.isButtonDown(0)) {
+				PlayClickButton();
 				if (menuUI.isButtonClicked("Continue") && Mouse.getEventButtonState()) {
 					clickContinue = true;
 					clickStart = false;
+					
 					StateManager.setState(GameState.CONTINUE);
 				} else if (menuUI.isButtonClicked("Play") && Mouse.getEventButtonState()) {
 					clickContinue = false;
@@ -45,6 +50,7 @@ public class MainMenu {
 				} else if (menuUI.isButtonClicked("Quit"))
 					System.exit(0);
 				else if (menuUI.isButtonClicked("Information") && Mouse.getEventButtonState()) {
+					isClickInformation = true;
 					StateManager.setState(GameState.INFORMATION);
 				} else if (menuUI.isButtonClicked("Music") && Mouse.getEventButtonState()) {
 					checkMusic = !checkMusic;
@@ -66,6 +72,7 @@ public class MainMenu {
 		menuUI.draw();
 		if (!error)
 			updateButtons();
+		PauseClickButton();
 	}
 
 	public void ContinueNull() {
@@ -76,6 +83,7 @@ public class MainMenu {
 
 			if (Mouse.isButtonDown(0)) {
 				if (menuUI.isButtonClicked("OK")) {
+					PlayClickButton();
 					menuUI.removeButton("Error");
 					menuUI.removeButton("OK");
 					error = false;
@@ -123,6 +131,25 @@ public class MainMenu {
 
 	public static void setClickEdit(boolean isClickEdit) {
 		MainMenu.isClickEdit = isClickEdit;
+	}
+	private void PlayClickButton() {
+		if(checkMusic)	{
+			clickMouse.restart();
+			totalTimeLastClick = Clock.getTime();
+		}
+	}
+	private void PauseClickButton()	{
+		if(Clock.getTime() - totalTimeLastClick > 1000)	{
+			clickMouse.pause();
+		}
+	}
+
+	public static boolean isClickInformation() {
+		return isClickInformation;
+	}
+
+	public static void setClickInformation(boolean isClickInformation) {
+		MainMenu.isClickInformation = isClickInformation;
 	}
 	
 }

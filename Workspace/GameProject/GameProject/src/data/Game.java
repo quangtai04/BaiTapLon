@@ -10,6 +10,7 @@ import org.newdawn.slick.opengl.Texture;
 
 import UI.UI;
 import helpers.Clock;
+import helpers.SimpleAudioPlayer;
 import helpers.StateManager;
 
 public class Game {
@@ -30,6 +31,8 @@ public class Game {
 			X1Enable = true, isClickBackMenu = false, isAudio = true;
 	private int x, y, multiplier = 1;
 	private String name = "";
+	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\click.wav");
+	private long totalTimeLastClick = 0;
 
 	public Game(TileGrid grid, int indexMap) {
 		this.grid = grid;
@@ -92,7 +95,7 @@ public class Game {
 		if (Mouse.next() && GameWin() == false && GameLose() == false) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			if (mouuseClicked) {
-
+				PlayClickButton();
 				int MouseX = Mouse.getX() / TILE_SIZE, MouseY = (HEIGHT - Mouse.getY() - 1) / TILE_SIZE;
 				if (MouseX < 20 && MouseY < 15) {
 					if(MouseX !=x || MouseY !=y) 
@@ -230,6 +233,7 @@ public class Game {
 		if (isDestroyCancel) {
 			DestroyTower();
 		}
+		PauseClickButton();
 		
 	}
 
@@ -240,6 +244,7 @@ public class Game {
 		gameUI.addButton("BackMenu", "HomeMenu", 550, 400, 200, 50);
 
 		if (Mouse.isButtonDown(0)) {
+			PlayClickButton();
 			if (gameUI.isButtonClicked("ReplayLose")) {
 				setGameReplay(true);
 			}
@@ -269,6 +274,7 @@ public class Game {
 			gameUI.removeButton("SelectedTower");
 		}
 		if (Mouse.isButtonDown(0) && tower != null) {
+			PlayClickButton();
 			if (gameUI.isButtonClicked("Destroy") && Mouse.getEventButtonState()) {
 				player.modifyCash(12);
 				player.removeTower(x, y);
@@ -437,6 +443,17 @@ public class Game {
 
 	public int getIndexMap() {
 		return this.indexMap;
+	}
+	private void PlayClickButton() {
+		if(isAudio)	{
+			clickMouse.restart();
+			totalTimeLastClick = Clock.getTime();
+		}
+	}
+	private void PauseClickButton()	{
+		if(Clock.getTime() - totalTimeLastClick > 500)	{
+			clickMouse.pause();
+		}
 	}
 
 }

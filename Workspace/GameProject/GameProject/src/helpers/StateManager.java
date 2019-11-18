@@ -133,6 +133,7 @@ public class StateManager {
 			if (editor == null || mainMenu.isClickEdit())	{
 				editor = new Editor();
 				mainMenu.setClickEdit(false);
+				editor.setAudio(mainMenu.getCheckMusic());
 			}
 			editor.update();
 			if (editor.getBackMenu() == true) {
@@ -141,8 +142,11 @@ public class StateManager {
 			}
 			break;
 		case INFORMATION:					// Thong tin game
-			if(information== null)	
+			if(information== null || mainMenu.isClickInformation())	{	
 				information = new Information();
+				mainMenu.setClickInformation(false);
+				information.setAudio(mainMenu.getCheckMusic());
+			}
 			information.update();
 			break;
 			

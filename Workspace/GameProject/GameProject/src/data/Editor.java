@@ -13,6 +13,7 @@ import org.newdawn.slick.opengl.Texture;
 import UI.UI;
 import UI.UI.Menu;
 import helpers.Clock;
+import helpers.SimpleAudioPlayer;
 
 public class Editor {
 
@@ -26,6 +27,9 @@ public class Editor {
 			isBackMenu = false, isAddMap = false, isDeleteMap = false;
 	private String mapName = "Map";
 	private int mapIndex = 0, numberMap = 9;
+	private boolean isAudio = true;
+	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\click.wav");
+	private long totalTimeLastClick = 0;
 
 	public Editor() {
 		this.grid = LoadMap(mapName + Integer.toString(mapIndex));
@@ -75,11 +79,13 @@ public class Editor {
 	public void update() {
 
 		draw();
-
+		PauseClickButton();
+		
 		if (Mouse.next()) {
 			boolean mouuseClicked = Mouse.isButtonDown(0);
 			int x = Mouse.getX();
 			if (mouuseClicked) {
+				PlayClickButton();
 				if (editorUI.isButtonClicked("Grass")) {// Bat su kien khi click vao button
 					index = 0;
 					editorUI.removeButton("Selected");
@@ -168,6 +174,7 @@ public class Editor {
 		if (isDeleteMap == true) {
 			deleteMap();
 		}
+		
 	}
 
 	private void draw() {
@@ -195,6 +202,7 @@ public class Editor {
 		editorUI.addButton("Yes", "yes", 200, 300, 150, 60);
 		editorUI.addButton("No", "no", 500, 300, 150, 60);
 		if (Mouse.isButtonDown(0)) {
+			PlayClickButton();
 			if (editorUI.isButtonClicked("Yes")) {
 				SaveMap(mapName + Integer.toString(mapIndex), grid);
 				if (isAddMap == true) {
@@ -243,6 +251,7 @@ public class Editor {
 		editorUI.addButton("Yes", "yes", 200, 300, 150, 60);
 		editorUI.addButton("No", "no", 500, 300, 150, 60);
 		if (Mouse.isButtonDown(0)) {
+			PlayClickButton();
 			if (editorUI.isButtonClicked("Yes")) {
 				DeleteMap(mapIndex);
 				numberMap--;
@@ -264,5 +273,23 @@ public class Editor {
 				editorUI.removeButton("No");
 			}
 		}
+	}
+	private void PlayClickButton() {
+		if(isAudio)	{
+			clickMouse.restart();
+			totalTimeLastClick = Clock.getTime();
+		}
+	}
+	private void PauseClickButton()	{
+		if(Clock.getTime() - totalTimeLastClick > 500)	{
+			clickMouse.pause();
+		}
+	}
+	public boolean isAudio() {
+		return isAudio;
+	}
+
+	public void setAudio(boolean isAudio) {
+		this.isAudio = isAudio;
 	}
 }
