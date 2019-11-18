@@ -22,6 +22,7 @@ public class Player {
 	private Tower tempTower;
 	public static int Cash, Lives, numberMap;
 	public int livesCount = 5, cashCount = 100;
+	private boolean isAudio = true;
 
 	public Player(TileGrid grid, WaveManager waveManager) {
 		this.grid = grid;
@@ -93,10 +94,10 @@ public class Player {
 		// Tang giam toc do game
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState()) {
-				Clock.ChangeMultiplier(0.2f);
+				Clock.setMultiplier(2f);
 			}
 			if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
-				Clock.ChangeMultiplier(-0.2f);
+				Clock.setMultiplier(1f);
 			}
 		}
 	}
@@ -105,6 +106,7 @@ public class Player {
 		Tile currentTile = getMouseTile();
 		if (holdingTower && tempTower != null) {
 			Tower tower = tempTower;
+			tempTower.setAudio(isAudio);
 			if (modifyCash2(-tempTower.getCost()) && !currentTile.getOcccupied()
 					&& currentTile.getType() == TileType.Grass) {
 				towerList.add(tempTower);
@@ -168,5 +170,17 @@ public class Player {
 	public void setNumberMap(int numberMap) {
 		this.numberMap = numberMap;
 		SaveNumberMap(numberMap);
+	}
+
+	public boolean isAudio() {
+		return isAudio;
+	}
+
+	public void setAudio(boolean isAudio) {
+		this.isAudio = isAudio;
+		waveManager.setIsAudio(isAudio);
+		for (Tower t : towerList) {
+			t.setAudio(isAudio);
+		}
 	}
 }

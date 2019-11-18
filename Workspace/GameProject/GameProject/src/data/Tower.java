@@ -1,6 +1,10 @@
 package data;
 
 import org.newdawn.slick.opengl.Texture;
+
+import helpers.Clock;
+import helpers.SimpleAudioPlayer;
+
 import static helpers.Artist.DrawQuadTex;
 import static helpers.Artist.DrawQuadTexRot;
 import static helpers.Clock.Delta;
@@ -18,6 +22,9 @@ public abstract class Tower implements Entity {
 	private boolean targeted;
 	public ArrayList<Projectile> projectiles;
 	public TowerType type;
+	private SimpleAudioPlayer fire = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\Fire.wav");
+	private boolean isAudio = true, isPlayed = false;
+	private long timeFire = 0;
 
 	public Tower(Tile startTile, CopyOnWriteArrayList<Enemy> enemies) {
 		this.type = TowerType.TowerNormal;
@@ -78,15 +85,28 @@ public abstract class Tower implements Entity {
 			angle = calculateAngle();
 			if (timeSinceLastShot > firingSpeed) {
 				shoot(target);
+				if(isAudio== true && isPlayed == false) {
+					fire.restart();
+					System.out.println("Fire Start");
+					timeFire = Clock.getTime();
+					isPlayed = true;
+				}
 				timeSinceLastShot = 0;
+				
 			}
 			
 		}
 
+		timeSinceLastShot += Delta();
+		if(Clock.getTime()-timeFire > 700 && isAudio && isPlayed)	{
+			isPlayed = false;
+			fire.pause();
+			System.out.println("Fire Pause");
+		}
 		if (target == null || target.isAlive() == false || (target != null && isInRange(target) == false))
 			targeted = false;
 
-		timeSinceLastShot += Delta();
+		
 
 		for (Projectile p : projectiles) {
 			p.update();
@@ -184,4 +204,13 @@ public abstract class Tower implements Entity {
 	public void setRange(int range) {
 		this.range = range;
 	}
+
+	public boolean isAudio() {
+		return isAudio;
+	}
+
+	public void setAudio(boolean isAudio) {
+		this.isAudio = isAudio;
+	}
+	
 }

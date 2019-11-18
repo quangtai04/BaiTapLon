@@ -66,7 +66,8 @@ public class StateManager {
 		case GAME:
 			if (mainMenu.getClickContinue()) {	// Gan game = gameSave (Game luu truoc do)
 				game = gameSave;
-				mainMenu.setClickContinue(false);	
+				mainMenu.setClickContinue(false);
+				game.setIsAudio(mainMenu.getCheckMusic());
 			}
 			
 			if (game == null || mainMenu.getClickStart()) {			// Neu click Start game, bat dau game moi
@@ -75,9 +76,10 @@ public class StateManager {
 				map = LoadMap("Map" + Integer.toString(levelMap));
 				game = new Game(map, levelMap);
 				mainMenu.setClickStart(false);
+				game.setIsAudio(mainMenu.getCheckMusic());
 			}
 			
-			game.setIsAudio(mainMenu.getCheckMusic());
+			
 			game.update();
 			
 			if (game.getBackMenu()) {				// Xu li back Menu

@@ -428,6 +428,7 @@ public class Game {
 	public void setIsAudio(boolean isAudio) {
 		this.isAudio = isAudio;
 		this.waveManager.setIsAudio(isAudio);
+		player.setAudio(isAudio);
 	}
 
 	public boolean getIsAudio() {
