@@ -31,7 +31,7 @@ public class Game {
 			X1Enable = true, isClickBackMenu = false, isAudio = true;
 	private int x, y, multiplier = 1;
 	private String name = "";
-	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\click.wav");
+	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("src\\res\\click.wav");
 	private long totalTimeLastClick = 0;
 
 	public Game(TileGrid grid, int indexMap) {

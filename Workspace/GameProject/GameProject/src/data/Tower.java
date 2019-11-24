@@ -22,7 +22,7 @@ public abstract class Tower implements Entity {
 	private boolean targeted;
 	public ArrayList<Projectile> projectiles;
 	public TowerType type;
-	private SimpleAudioPlayer fire = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\Fire.wav");
+	private SimpleAudioPlayer fire = new SimpleAudioPlayer("src\\res\\Fire.wav");
 	private boolean isAudio = true, isPlayed = false;
 	private long timeFire = 0;
 

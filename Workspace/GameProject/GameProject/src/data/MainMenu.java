@@ -16,7 +16,7 @@ public class MainMenu {
 	private UI menuUI;
 	private static boolean error = false, clickContinue = false, clickStart = false, checkMusic = true,
 			isClickMusic = false, isClickEdit = false, isClickInformation = false;			//error = true khi gameSave = null, false khi gameSave != null;
-	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\click.wav");
+	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("src\\res\\click.wav");
 	private long totalTimeLastClick = 0;
 	
 	public MainMenu() {

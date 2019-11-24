@@ -28,7 +28,7 @@ public class Editor {
 	private String mapName = "Map";
 	private int mapIndex = 0, numberMap = 9;
 	private boolean isAudio = true;
-	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\click.wav");
+	private SimpleAudioPlayer clickMouse = new SimpleAudioPlayer("src\\res\\click.wav");
 	private long totalTimeLastClick = 0;
 
 	public Editor() {

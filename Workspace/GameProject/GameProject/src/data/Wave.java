@@ -22,7 +22,7 @@ public class Wave {
 	private long lastTotalTime = 0, totalTime = 0;
 	private int numberDie = 0;
 	private SimpleAudioPlayer playDie = new SimpleAudioPlayer(
-			"C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\Die.wav");
+			"res\\Die.wav");
 	private boolean played = false; // Kiem tra xem audio phat lan dau hay khong
 	private boolean isAudio = true; // Bat, Tat audio
 

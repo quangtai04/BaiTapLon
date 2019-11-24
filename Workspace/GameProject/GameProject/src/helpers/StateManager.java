@@ -14,7 +14,7 @@ import org.lwjgl.input.Mouse;
 
 public class StateManager {
 	private static SimpleAudioPlayer simpleAudioPlayer = new SimpleAudioPlayer(
-			"C:\\Users\\#HarryPotter\\Desktop\\Workspace\\GameProject\\GameProject\\src\\res\\nhacnen.wav");
+			"src\\res\\nhacnen.wav");
 	private static int numberMap = LoadNumberMap() - 1;
 	
 	public static enum GameState {
